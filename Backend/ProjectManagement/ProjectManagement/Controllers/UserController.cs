@@ -8,11 +8,12 @@ using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using System;
-using DAL.Entities.User;
+using DAL.Entities;
 using System.Collections.Generic;
 using Microsoft.Extensions.Options;
 using Common.Helpers;
 using Model;
+using Model.Common;
 
 namespace WebApi.Controllers
 {
@@ -87,20 +88,20 @@ namespace WebApi.Controllers
         public IActionResult GetAll()
         {
             var users = _userService.GetAll();
-            var model = _mapper.Map<IList<UserModel>>(users);
+            var model = _mapper.Map<IList<IUserModel>>(users);
             return Ok(model);
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetById(int id)
+        public IActionResult GetById(Guid id)
         {
             var user = _userService.GetById(id);
-            var model = _mapper.Map<UserModel>(user);
+            var model = _mapper.Map<IUserModel>(user);
             return Ok(model);
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(int id, [FromBody]UpdateModel model)
+        public IActionResult Update(Guid id, [FromBody]UpdateModel model)
         {
             var user = _mapper.Map<User>(model);
             user.Id = id;
@@ -116,7 +117,7 @@ namespace WebApi.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public IActionResult Delete(Guid id)
         {
             _userService.Delete(id);
             return Ok();

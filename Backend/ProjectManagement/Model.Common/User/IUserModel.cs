@@ -6,9 +6,11 @@ namespace Model.Common
 {
     public interface IUserModel
     {
-        int Id { get; set; }
-        string FirstName { get; set; }
-        string LastName { get; set; }
-        string Username { get; set; }
+        public Guid Id { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string Username { get; set; }
+        public byte[] PasswordHash { get; set; }
+        public byte[] PasswordSalt { get; set; }
     }
 }

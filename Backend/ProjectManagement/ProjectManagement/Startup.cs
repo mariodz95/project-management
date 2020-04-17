@@ -18,6 +18,9 @@ using Microsoft.OpenApi.Models;
 using System.Threading.Tasks;
 using Common.Helpers;
 using System.Collections.Generic;
+using Repository.User;
+using Repository.Common.User;
+using System;
 
 namespace ProjectManagement
 {
@@ -32,6 +35,8 @@ namespace ProjectManagement
         {
             // This will all go in the ROOT CONTAINER and is NOT TENANT SPECIFIC.
             builder.RegisterType<UserService>().As<IUserService>();
+            builder.RegisterType<UserRepository>().As<IUserRepository>();
+
             var config = new MapperConfiguration(cfg =>
             {
                 cfg.AddProfile(new AutoMapperProfile());
@@ -68,7 +73,7 @@ namespace ProjectManagement
                     OnTokenValidated = context =>
                     {
                         var userService = context.HttpContext.RequestServices.GetRequiredService<IUserService>();
-                        var userId = int.Parse(context.Principal.Identity.Name);
+                        var userId = Guid.Parse(context.Principal.Identity.Name);
                         var user = userService.GetById(userId);
                         if (user == null)
                         {
