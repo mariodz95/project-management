@@ -1,17 +1,10 @@
 ﻿using Common.Helpers;
 using DAL;
-using DAL.Entities;
 using DAL.Entities.User;
-using Helpers;
-using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
 using Service.Common;
 using System;
 using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
-using System.Security.Claims;
-using System.Text;
 
 namespace Service
 {

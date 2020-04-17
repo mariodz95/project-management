@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DAL
 {
-    public class ProjectManagementContext : IdentityDbContext
+    public class ProjectManagementContext : DbContext
     {
         public ProjectManagementContext(DbContextOptions<ProjectManagementContext> options) 
             : base(options)

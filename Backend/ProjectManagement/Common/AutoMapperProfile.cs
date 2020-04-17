@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using DAL.Entities.User;
-using Model;
+using Model.Common;
 
 namespace Common.Helpers
 {
@@ -8,9 +8,9 @@ namespace Common.Helpers
     {
         public AutoMapperProfile()
         {
-            CreateMap<User, UserModel>();
-            CreateMap<RegisterModel, User>();
-            CreateMap<UpdateModel, User>();
+            CreateMap<User, IUserModel>();
+            CreateMap<IRegisterModel, User>();
+            CreateMap<IUpdateModel, User>();
         }
     }
 }

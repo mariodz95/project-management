@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using ProjectManagement.Models;
 using Service.Common;
 using AutoMapper;
 using Helpers;
@@ -13,6 +12,7 @@ using DAL.Entities.User;
 using System.Collections.Generic;
 using Microsoft.Extensions.Options;
 using Common.Helpers;
+using Model;
 
 namespace WebApi.Controllers
 {
@@ -57,8 +57,6 @@ namespace WebApi.Controllers
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
             var tokenString = tokenHandler.WriteToken(token);
-
-            // return basic user info and authentication token
             return Ok(new
             {
                 Id = user.Id,
@@ -73,18 +71,14 @@ namespace WebApi.Controllers
         [HttpPost("register")]
         public IActionResult Register([FromBody]RegisterModel model)
         {
-            // map model to entity
             var user = _mapper.Map<User>(model);
-
             try
             {
-                // create user
                 _userService.Create(user, model.Password);
                 return Ok();
             }
             catch (AppException ex)
             {
-                // return error message if there was an exception
                 return BadRequest(new { message = ex.Message });
             }
         }
@@ -108,19 +102,15 @@ namespace WebApi.Controllers
         [HttpPut("{id}")]
         public IActionResult Update(int id, [FromBody]UpdateModel model)
         {
-            // map model to entity and set id
             var user = _mapper.Map<User>(model);
             user.Id = id;
-
             try
             {
-                // update user 
                 _userService.Update(user, model.Password);
                 return Ok();
             }
             catch (AppException ex)
             {
-                // return error message if there was an exception
                 return BadRequest(new { message = ex.Message });
             }
         }
