@@ -1,6 +1,4 @@
-﻿
-
-namespace Helpers
+﻿namespace Helpers
 {
     public class AppSettings
     {

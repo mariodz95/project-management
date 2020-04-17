@@ -1,6 +1,4 @@
-﻿
-
-namespace DAL.Entities.User
+﻿namespace DAL.Entities.User
 {
     public class User
     {

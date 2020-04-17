@@ -93,7 +93,6 @@ namespace ProjectManagement
             options.UseSqlServer(
                 Configuration.GetConnectionString("DefaultConnection")));
 
-            //Need replace
             services.AddIdentityServer()
                 .AddDeveloperSigningCredential()
                 .AddTestUsers(Config.GetUsers())
@@ -108,8 +107,8 @@ namespace ProjectManagement
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Project Management", Version = "v1" });
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
-                    Description =
-        "JWT Authorization header using the Bearer scheme. \r\n\r\n Enter 'Bearer' [space] and then your token in the text input below.\r\n\r\nExample: \"Bearer 12345abcdef\"",
+                    Description =  "JWT Authorization header using the Bearer scheme. \r\n\r\n Enter 'Bearer' [space] and then your token in the text input below." +
+                    "\r\n\r\nExample: \"Bearer 12345abcdef\"",
                     Name = "Authorization",
                     In = ParameterLocation.Header,
                     Type = SecuritySchemeType.ApiKey,
@@ -117,23 +116,22 @@ namespace ProjectManagement
                 });
 
                 c.AddSecurityRequirement(new OpenApiSecurityRequirement()
-{
-    {
-        new OpenApiSecurityScheme
-        {
-            Reference = new OpenApiReference
-            {
-                Type = ReferenceType.SecurityScheme,
-                Id = "Bearer"
-            },
-            Scheme = "oauth2",
-            Name = "Bearer",
-            In = ParameterLocation.Header,
-
-        },
-        new List<string>()
-    }
-});
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            },
+                            Scheme = "oauth2",
+                            Name = "Bearer",
+                            In = ParameterLocation.Header,
+                        },
+                        new List<string>()
+                    }
+                });
             });
 
         }
@@ -159,7 +157,6 @@ namespace ProjectManagement
             app.UseAuthentication();
             app.UseAuthorization();
 
-
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
 
@@ -167,9 +164,8 @@ namespace ProjectManagement
             // specifying the Swagger JSON endpoint.
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Project Management API V1");
             });
-
 
             app.UseEndpoints(endpoints =>
             {

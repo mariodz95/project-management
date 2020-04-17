@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Model.Common;
 
-namespace ProjectManagement.Models
+namespace Model
 {
-    public class UserModel
+    public class UserModel : IUserModel
     {
         public int Id { get; set; }
         public string FirstName { get; set; }

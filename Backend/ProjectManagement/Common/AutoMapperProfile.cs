@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using DAL.Entities.User;
-using ProjectManagement.Models;
+using Model;
 
 namespace Common.Helpers
 {

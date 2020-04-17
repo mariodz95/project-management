@@ -1,8 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Model.Common;
+using System.ComponentModel.DataAnnotations;
 
-namespace ProjectManagement.Models
+namespace Model
 {
-    public class AuthenticateModel
+    public class AuthenticateModel : IAuthenticateModel
     {
         [Required]
         public string Username { get; set; }
