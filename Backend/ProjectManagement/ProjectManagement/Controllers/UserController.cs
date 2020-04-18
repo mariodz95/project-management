@@ -1,19 +1,16 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Service.Common;
-using AutoMapper;
 using Helpers;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using System;
-using DAL.Entities;
-using System.Collections.Generic;
 using Microsoft.Extensions.Options;
 using Common.Helpers;
 using Model;
-using Model.Common;
+using System.Threading.Tasks;
 
 namespace WebApi.Controllers
 {
@@ -23,27 +20,26 @@ namespace WebApi.Controllers
     public class UsersController : ControllerBase
     {
         private IUserService _userService;
-        private IMapper _mapper;
         private readonly AppSettings _appSettings;
 
         public UsersController(
             IUserService userService,
-            IMapper mapper,
             IOptions<AppSettings> appSettings)
         {
             _userService = userService;
-            _mapper = mapper;
             _appSettings = appSettings.Value;
         }
 
         [AllowAnonymous]
         [HttpPost("authenticate")]
-        public IActionResult Authenticate([FromBody]AuthenticateModel model)
+        public async Task<IActionResult> Authenticate([FromBody]AuthenticateModel model)
         {
-            var user = _userService.Authenticate(model.Username, model.Password);
+            var user = await _userService.Authenticate(model.Username, model.Password);
 
             if (user == null)
+            {
                 return BadRequest(new { message = "Username or password is incorrect" });
+            }
 
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
@@ -70,12 +66,11 @@ namespace WebApi.Controllers
 
         [AllowAnonymous]
         [HttpPost("register")]
-        public IActionResult Register([FromBody]RegisterModel model)
+        public async Task<IActionResult> Register([FromBody]RegisterModel model)
         {
-            var user = _mapper.Map<User>(model);
             try
             {
-                _userService.Create(user, model.Password);
+                await _userService.Create(model);
                 return Ok();
             }
             catch (AppException ex)
@@ -85,29 +80,25 @@ namespace WebApi.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            var users = _userService.GetAll();
-            var model = _mapper.Map<IList<IUserModel>>(users);
-            return Ok(model);
+            var users = await _userService.GetAll();
+            return Ok(users);
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetById(Guid id)
+        public async Task<IActionResult> GetById(Guid id)
         {
-            var user = _userService.GetById(id);
-            var model = _mapper.Map<IUserModel>(user);
-            return Ok(model);
+            var user = await _userService.GetById(id);
+            return Ok(user);
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(Guid id, [FromBody]UpdateModel model)
+        public async Task<IActionResult> UpdateAsync(Guid id, [FromBody]UpdateModel model)
         {
-            var user = _mapper.Map<User>(model);
-            user.Id = id;
             try
             {
-                _userService.Update(user, model.Password);
+                await _userService.UpdateAsync(id, model);
                 return Ok();
             }
             catch (AppException ex)
@@ -117,10 +108,10 @@ namespace WebApi.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(Guid id)
+        public async Task<IActionResult> DeleteAsync(Guid id)
         {
-            _userService.Delete(id);
-            return Ok();
+            var deleted = await _userService.DeleteAsync(id);
+            return Ok(deleted);
         }
     }
 }

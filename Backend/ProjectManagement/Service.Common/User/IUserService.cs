@@ -1,16 +1,19 @@
 ﻿using DAL.Entities;
+using Model;
+using Model.Common;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Service.Common
 {
     public interface IUserService
     {
-        User Authenticate(string username, string password);
-        IEnumerable<User> GetAll();
-        User GetById(Guid id);
-        User Create(User user, string password);
-        void Update(User user, string password = null);
-        void Delete(Guid id);
+        Task<User> Authenticate(string username, string password);
+        Task<List<IUserModel>> GetAll();
+        Task<IUserModel> GetById(Guid id);
+        Task<User> Create(RegisterModel model);
+        Task<bool> UpdateAsync(Guid id, UpdateModel model, string password = null);
+        Task<bool> DeleteAsync(Guid id);
     }
 }

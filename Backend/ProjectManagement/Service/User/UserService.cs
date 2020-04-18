@@ -1,10 +1,14 @@
-﻿using Common.Helpers;
+﻿using AutoMapper;
+using Common.Helpers;
 using DAL;
 using DAL.Entities;
+using Model;
+using Model.Common;
 using Repository.Common.User;
 using Service.Common;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Service
 {
@@ -12,20 +16,22 @@ namespace Service
     public class UserService : IUserService
     {
         private IUserRepository _userRepository;
+        private IMapper _mapper;
 
-        public UserService(IUserRepository userRepository)
+        public UserService(IUserRepository userRepository, IMapper mapper)
         {
             _userRepository = userRepository;
+            _mapper = mapper;
         }
 
-        public User Authenticate(string username, string password)
+        public async Task<User> Authenticate(string username, string password)
         {
             if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
             {
                 return null;
             }
 
-            var user =  _userRepository.GetUser(username);
+            var user = await _userRepository.GetUser(username);
 
             if (user == null)
             {
@@ -40,41 +46,35 @@ namespace Service
             return user;
         }
 
-        public IEnumerable<User> GetAll()
+        public async Task<List<IUserModel>> GetAll()
         {
-            return _userRepository.GetAll();
+            var users = await _userRepository.GetAll();
+            return _mapper.Map<List<IUserModel>>(users);
         }
 
-        public User GetById(Guid id)
+        public async Task<IUserModel> GetById(Guid id)
         {
-            return _userRepository.GetById(id);
+            var user = await _userRepository.GetById(id);
+            return _mapper.Map<IUserModel>(user);
         }
 
-        public User Create(User user, string password)
+        public async Task<User> Create(RegisterModel model)
         {
-            return _userRepository.Create(user, password);
+            var password = model.Password;
+            var user = _mapper.Map<User>(model);
+            return await _userRepository.Create(user, password);
         }
 
-        public void Update(User userParam, string password = null)
+        public async Task<bool> UpdateAsync(Guid id, UpdateModel model, string password = null)
         {
-            _userRepository.Update(userParam, password);
+            var user = _mapper.Map<User>(model);
+            user.Id = id;
+            return await _userRepository.UpdateAsync(user, password);
         }
 
-        public void Delete(Guid id)
+        public async Task<bool> DeleteAsync(Guid id)
         {
-             _userRepository.Delete(id);
-        }
-
-        private static void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
-        {
-            if (password == null) throw new ArgumentNullException("password");
-            if (string.IsNullOrWhiteSpace(password)) throw new ArgumentException("Value cannot be empty or whitespace only string.", "password");
-
-            using (var hmac = new System.Security.Cryptography.HMACSHA512())
-            {
-                passwordSalt = hmac.Key;
-                passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
-            }
+             return await _userRepository.DeleteAsync(id);
         }
 
         private static bool VerifyPasswordHash(string password, byte[] storedHash, byte[] storedSalt)

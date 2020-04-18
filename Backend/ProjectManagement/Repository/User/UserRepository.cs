@@ -1,9 +1,11 @@
 ﻿using Common.Helpers;
 using DAL;
+using Microsoft.EntityFrameworkCore;
 using Repository.Common.User;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Repository.User
 {
@@ -16,56 +18,62 @@ namespace Repository.User
             _context = context;
         }
 
-        public DAL.Entities.User GetUser(string username)
+        public async Task<DAL.Entities.User> GetUser(string username)
         {
-            return _context.Users.SingleOrDefault(x => x.Username == username);
+            return await _context.Users.SingleOrDefaultAsync(x => x.Username == username);
         }
 
-        public IEnumerable<DAL.Entities.User> GetAll()
+        public async Task<List<DAL.Entities.User>> GetAll()
         {
-            return _context.Users;
+            return await _context.Users.ToListAsync();
         }
 
-        public DAL.Entities.User GetById(Guid id)
+        public async Task<DAL.Entities.User> GetById(Guid id)
         {
-            return _context.Users.Find(id);
+            return await _context.Users.FindAsync(id);
         }
 
-        public void Delete(Guid id)
+        public async Task<bool> DeleteAsync(Guid id)
         {
-            var user = _context.Users.Find(id);
+            var user = await _context.Users.FindAsync(id);
             if (user != null)
             {
-                _context.Users.Remove(user);
-                _context.SaveChanges();
+               _context.Users.Remove(user);
+               await _context.SaveChangesAsync();
+               return true;
             }
+            return false;
         }
 
-        public void Update(DAL.Entities.User userParam, string password = null)
+        public async Task<bool> UpdateAsync(DAL.Entities.User userParam, string password = null)
         {
-            var user = _context.Users.Find(userParam.Id);
+            var user = await GetById(userParam.Id);
 
             if (user == null)
+            {
                 throw new AppException("User not found");
+            }
 
-            // update username if it has changed
             if (!string.IsNullOrWhiteSpace(userParam.Username) && userParam.Username != user.Username)
             {
-                // throw error if the new username is already taken
-                if (_context.Users.Any(x => x.Username == userParam.Username))
+                if (await _context.Users.AnyAsync(x => x.Username == userParam.Username))
+                {
                     throw new AppException("Username " + userParam.Username + " is already taken");
+                }
 
                 user.Username = userParam.Username;
             }
 
-            // update user properties if provided
             if (!string.IsNullOrWhiteSpace(userParam.FirstName))
+            {
                 user.FirstName = userParam.FirstName;
+            }
 
             if (!string.IsNullOrWhiteSpace(userParam.LastName))
+            {
                 user.LastName = userParam.LastName;
+            }
 
-            // update password if provided
             if (!string.IsNullOrWhiteSpace(password))
             {
                 byte[] passwordHash, passwordSalt;
@@ -76,10 +84,11 @@ namespace Repository.User
             }
 
             _context.Users.Update(user);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
+            return true;
         }
 
-        public DAL.Entities.User Create(DAL.Entities.User user, string password)
+        public async Task<DAL.Entities.User> Create(DAL.Entities.User user, string password)
         {
             if (string.IsNullOrWhiteSpace(password))
             {
@@ -97,8 +106,8 @@ namespace Repository.User
             user.PasswordHash = passwordHash;
             user.PasswordSalt = passwordSalt;
 
-            _context.Users.Add(user);
-            _context.SaveChanges();
+            await _context.Users.AddAsync(user);
+            await _context.SaveChangesAsync();
 
             return user;
         }
@@ -113,25 +122,6 @@ namespace Repository.User
                 passwordSalt = hmac.Key;
                 passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
             }
-        }
-
-        private static bool VerifyPasswordHash(string password, byte[] storedHash, byte[] storedSalt)
-        {
-            if (password == null) throw new ArgumentNullException("password");
-            if (string.IsNullOrWhiteSpace(password)) throw new ArgumentException("Value cannot be empty or whitespace only string.", "password");
-            if (storedHash.Length != 64) throw new ArgumentException("Invalid length of password hash (64 bytes expected).", "passwordHash");
-            if (storedSalt.Length != 128) throw new ArgumentException("Invalid length of password salt (128 bytes expected).", "passwordHash");
-
-            using (var hmac = new System.Security.Cryptography.HMACSHA512(storedSalt))
-            {
-                var computedHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
-                for (int i = 0; i < computedHash.Length; i++)
-                {
-                    if (computedHash[i] != storedHash[i]) return false;
-                }
-            }
-
-            return true;
         }
     }
 }
