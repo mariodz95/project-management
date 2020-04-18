@@ -15,5 +15,6 @@ namespace Service.Common
         Task<User> Create(RegisterModel model);
         Task<bool> UpdateAsync(Guid id, UpdateModel model, string password = null);
         Task<bool> DeleteAsync(Guid id);
+        string GetToken(User user);
     }
 }

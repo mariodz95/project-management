@@ -105,6 +105,7 @@ namespace Repository.User
 
             user.PasswordHash = passwordHash;
             user.PasswordSalt = passwordSalt;
+            user.Role = Role.User;
 
             await _context.Users.AddAsync(user);
             await _context.SaveChangesAsync();
