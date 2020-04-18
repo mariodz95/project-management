@@ -1,5 +1,5 @@
 ﻿
-namespace DAL.Entities
+namespace Common.Helpers
 {
     public static class Role
     {
