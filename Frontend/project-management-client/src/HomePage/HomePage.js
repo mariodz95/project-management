@@ -2,11 +2,11 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 
-import { userActions } from "../actions/userActions";
+import { userActions, getAll } from "../actions/userActions";
 
 class HomePage extends React.Component {
   componentDidMount() {
-    this.props.getUsers();
+    this.props.getAll();
   }
 
   handleDeleteUser(id) {
@@ -36,5 +36,7 @@ const actionCreators = {
   deleteUser: userActions.delete,
 };
 
-const connectedHomePage = connect(mapState, actionCreators)(HomePage);
+const connectedHomePage = connect(mapState, { actionCreators, getAll })(
+  HomePage
+);
 export { connectedHomePage as HomePage };

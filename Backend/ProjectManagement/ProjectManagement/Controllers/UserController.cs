@@ -1,16 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Service.Common;
-using Helpers;
-using System.IdentityModel.Tokens.Jwt;
-using System.Text;
-using Microsoft.IdentityModel.Tokens;
-using System.Security.Claims;
 using System;
-using Microsoft.Extensions.Options;
 using Common.Helpers;
 using Model;
 using System.Threading.Tasks;
+using ProjectManagement;
 
 namespace WebApi.Controllers
 {
@@ -40,15 +35,17 @@ namespace WebApi.Controllers
 
             var tokenString = _userService.GetToken(user);
 
-            return Ok(new
+            var userModel = new UserViewModel()
             {
                 Id = user.Id,
                 Username = user.Username,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
-                Role = user.Role,
+                Role = user.UserRole.Abrv,
                 Token = tokenString
-            });
+            };
+
+            return Ok(userModel);
         }
 
         [AllowAnonymous]

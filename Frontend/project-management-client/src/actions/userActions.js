@@ -4,28 +4,23 @@ import { alertActions } from "./alertActions";
 import { history } from "../helpers/history";
 
 export const userActions = {
-  login,
-  logout,
-  getAll,
   register,
   delete: _delete,
 };
 
-function login(username, password) {
-  return (dispatch) => {
-    dispatch(request({ username }));
+export const login = (username, password) => (dispatch) => {
+  dispatch(request({ username }));
 
-    userService.login(username, password).then(
-      (user) => {
-        dispatch(success(user));
-        history.push("/");
-      },
-      (error) => {
-        dispatch(failure(error));
-        dispatch(alertActions.error(error));
-      }
-    );
-  };
+  userService.login(username, password).then(
+    (user) => {
+      dispatch(success(user));
+      history.push("/");
+    },
+    (error) => {
+      dispatch(failure(error));
+      dispatch(alertActions.error(error));
+    }
+  );
 
   function request(user) {
     return { type: userConstants.LOGIN_REQUEST, user };
@@ -36,7 +31,7 @@ function login(username, password) {
   function failure(error) {
     return { type: userConstants.LOGIN_FAILURE, error };
   }
-}
+};
 
 function register(user) {
   return (dispatch) => {
@@ -66,23 +61,21 @@ function register(user) {
   }
 }
 
-function logout() {
+export const logout = () => {
   userService.logout();
   return { type: userConstants.LOGOUT };
-}
+};
 
-function getAll() {
-  return (dispatch) => {
-    dispatch(request());
+export const getAll = () => (dispatch) => {
+  dispatch(request());
 
-    userService.getAll().then(
-      (users) => dispatch(success(users)),
-      (error) => {
-        dispatch(failure(error));
-        dispatch(alertActions.error(error));
-      }
-    );
-  };
+  userService.getAll().then(
+    (users) => dispatch(success(users)),
+    (error) => {
+      dispatch(failure(error));
+      dispatch(alertActions.error(error));
+    }
+  );
 
   function request() {
     return { type: userConstants.GETALL_REQUEST };
@@ -93,7 +86,7 @@ function getAll() {
   function failure(error) {
     return { type: userConstants.GETALL_FAILURE, error };
   }
-}
+};
 
 // prefixed function name with underscore because delete is a reserved word in javascript
 function _delete(id) {

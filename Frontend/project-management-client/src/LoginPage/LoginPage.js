@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
+import PropTypes from "prop-types";
 
-import { userActions } from "../actions/userActions";
+import { login, logout } from "../actions/userActions";
 
 class LoginPage extends React.Component {
   constructor(props) {
@@ -92,15 +93,16 @@ class LoginPage extends React.Component {
   }
 }
 
-function mapState(state) {
-  const { loggingIn } = state.authentication;
-  return { loggingIn };
-}
-
-const actionCreators = {
-  login: userActions.login,
-  logout: userActions.logout,
+LoginPage.propTypes = {
+  login: PropTypes.func.isRequired,
+  logout: PropTypes.func.isRequired,
 };
 
-const connectedLoginPage = connect(mapState, actionCreators)(LoginPage);
+const mapStateToProps = (state) => ({
+  loggingIn: state.authentication.user,
+});
+
+const connectedLoginPage = connect(mapStateToProps, { login, logout })(
+  LoginPage
+);
 export { connectedLoginPage as LoginPage };

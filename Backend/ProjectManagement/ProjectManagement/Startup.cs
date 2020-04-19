@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using Repository.User;
 using Repository.Common.User;
 using System;
+using ProjectManagement.Models;
 
 namespace ProjectManagement
 {
@@ -40,6 +41,7 @@ namespace ProjectManagement
             var config = new MapperConfiguration(cfg =>
             {
                 cfg.AddProfile(new AutoMapperProfile());
+                cfg.AddProfile(new ControllerModule());
             });
 
             var mapper = config.CreateMapper();

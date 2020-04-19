@@ -1,5 +1,6 @@
 ﻿using Common.Helpers;
 using DAL;
+using DAL.Entities;
 using Microsoft.EntityFrameworkCore;
 using Repository.Common.User;
 using System;
@@ -20,7 +21,9 @@ namespace Repository.User
 
         public async Task<DAL.Entities.User> GetUser(string username)
         {
-            return await _context.Users.SingleOrDefaultAsync(x => x.Username == username);
+            var user = await _context.Users.SingleOrDefaultAsync(x => x.Username == username);
+            await _context.UserRole.FirstOrDefaultAsync(u => u.UserId == user.Id);
+            return user;
         }
 
         public async Task<List<DAL.Entities.User>> GetAll()
@@ -103,10 +106,22 @@ namespace Repository.User
             byte[] passwordHash, passwordSalt;
             CreatePasswordHash(password, out passwordHash, out passwordSalt);
 
+            user.Id = Guid.NewGuid();
+            user.DateCreated = DateTime.Now;
+            user.DateUpdated = DateTime.Now;
             user.PasswordHash = passwordHash;
             user.PasswordSalt = passwordSalt;
-            user.Role = Role.User;
 
+            var userROle = new UserRole {
+                Id = Guid.NewGuid(),
+                DateUpdated = DateTime.Now,
+                DateCreated = DateTime.Now,
+                Name = Role.User,
+                Abrv = Role.User,
+                UserId = user.Id,
+             };
+
+            await _context.UserRole.AddAsync(userROle);
             await _context.Users.AddAsync(user);
             await _context.SaveChangesAsync();
 

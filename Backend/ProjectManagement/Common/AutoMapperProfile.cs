@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using DAL.Entities;
+using Model;
 using Model.Common;
 
 namespace Common.Helpers
