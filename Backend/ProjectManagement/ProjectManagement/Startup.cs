@@ -19,9 +19,10 @@ using System.Threading.Tasks;
 using Common.Helpers;
 using System.Collections.Generic;
 using Repository.User;
-using Repository.Common.User;
+using Repository.Common;
 using System;
 using ProjectManagement.Models;
+using Repository;
 
 namespace ProjectManagement
 {
@@ -37,6 +38,7 @@ namespace ProjectManagement
             // This will all go in the ROOT CONTAINER and is NOT TENANT SPECIFIC.
             builder.RegisterType<UserService>().As<IUserService>();
             builder.RegisterType<UserRepository>().As<IUserRepository>();
+            builder.RegisterType<UnitOfWork>().As<IUnitOfWork>();
 
             var config = new MapperConfiguration(cfg =>
             {
@@ -76,7 +78,7 @@ namespace ProjectManagement
                     {
                         var userService = context.HttpContext.RequestServices.GetRequiredService<IUserService>();
                         var userId = Guid.Parse(context.Principal.Identity.Name);
-                        var user = userService.GetById(userId);
+                        var user = userService.GetByIdAsync(userId);
                         if (user == null)
                         {
                             // return unauthorized if user no longer exists

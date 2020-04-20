@@ -6,34 +6,40 @@ using Common.Helpers;
 using Model;
 using System.Threading.Tasks;
 using ProjectManagement;
+using Common.Interface_Sort_Pag_Flt;
+using Common.Sort_Pag_Flt;
+using Model.Common;
+using AutoMapper;
+using ProjectManagement.Models;
 
 namespace WebApi.Controllers
 {
     [Authorize]
     [ApiController]
     [Route("[controller]")]
-    public class UsersController : ControllerBase
+    public class UsersController : Controller
     {
-        private IUserService _userService;
+        private IUserService userService;
+        private IMapper mapper;
 
-        public UsersController(
-            IUserService userService)
+        public UsersController(IUserService userService, IMapper mapper)
         {
-            _userService = userService;
+            this.userService = userService;
+            this.mapper = mapper;
         }
 
         [AllowAnonymous]
         [HttpPost("authenticate")]
-        public async Task<IActionResult> Authenticate([FromBody]AuthenticateModel model)
+        public async Task<IActionResult> Authenticate([FromBody]AuthenticateViewModel model)
         {
-            var user = await _userService.Authenticate(model.Username, model.Password);
+            var user = await userService.Authenticate(model.Username, model.Password);
 
             if (user == null)
             {
                 return BadRequest(new { message = "Username or password is incorrect" });
             }
 
-            var tokenString = _userService.GetToken(user);
+            var tokenString = userService.GetToken(user);
 
             var userModel = new UserViewModel()
             {
@@ -50,11 +56,12 @@ namespace WebApi.Controllers
 
         [AllowAnonymous]
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody]RegisterModel model)
+        public async Task<IActionResult> Register([FromBody]RegisterViewModel model)
         {
             try
             {
-                await _userService.Create(model);
+                var user = mapper.Map<IUserModel>(model);
+                await userService.CreateAsync(user, model.Password);
                 return Ok();
             }
             catch (AppException ex)
@@ -65,9 +72,26 @@ namespace WebApi.Controllers
 
         [Authorize(Roles = Role.Admin)]
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll(int pageSize, int totalPages, string sort = null, string search = null, int? pageNumber = null)
         {
-            var users = await _userService.GetAll();
+            IFiltering filtering = new Filtering
+            {
+                FilterValue = search
+            };
+
+            ISorting sorting = new Sorting
+            {
+                SortOrder = sort
+            };
+
+            IPaging paging = new Paging
+            {
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                TotalPages = totalPages
+            };
+
+            var users = await userService.GetAll(filtering, sorting, paging);
             return Ok(users);
         }
 
@@ -75,16 +99,17 @@ namespace WebApi.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(Guid id)
         {
-            var user = await _userService.GetById(id);
+            var user = await userService.GetByIdAsync(id);
             return Ok(user);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateAsync(Guid id, [FromBody]UpdateModel model)
+        public async Task<IActionResult> UpdateAsync(Guid id, [FromBody]UpdateViewModel model)
         {
             try
             {
-                await _userService.UpdateAsync(id, model);
+                var updateUser = mapper.Map<IUserModel>(model);
+                await userService.UpdateAsync(id, updateUser, model.Password);
                 return Ok();
             }
             catch (AppException ex)
@@ -97,8 +122,14 @@ namespace WebApi.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAsync(Guid id)
         {
-            var deleted = await _userService.DeleteAsync(id);
+            var deleted = await userService.DeleteAsync(id);
             return Ok(deleted);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            userService.Dispose(disposing);
+            base.Dispose(disposing);
         }
     }
 }

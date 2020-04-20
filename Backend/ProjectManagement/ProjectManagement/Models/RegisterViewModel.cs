@@ -1,9 +1,8 @@
-﻿using Model.Common;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace Model
+namespace ProjectManagement.Models
 {
-    public class RegisterModel : IRegisterModel
+    public class RegisterViewModel
     {
         [Required]
         public string FirstName { get; set; }

@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using DAL.Entities;
-using Model;
 using Model.Common;
+using Model.Common.User;
 
 namespace Common.Helpers
 {
@@ -10,8 +10,7 @@ namespace Common.Helpers
         public AutoMapperProfile()
         {
             CreateMap<User, IUserModel>().ReverseMap();
-            CreateMap<IRegisterModel, User>().ReverseMap();
-            CreateMap<IUpdateModel, User>().ReverseMap();
+            CreateMap<UserRole, IUserRoleModel>().ReverseMap();
         }
     }
 }

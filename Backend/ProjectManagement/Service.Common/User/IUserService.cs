@@ -1,4 +1,5 @@
-﻿using DAL.Entities;
+﻿using Common.Interface_Sort_Pag_Flt;
+using DAL.Entities;
 using Model;
 using Model.Common;
 using System;
@@ -9,12 +10,13 @@ namespace Service.Common
 {
     public interface IUserService
     {
-        Task<User> Authenticate(string username, string password);
-        Task<List<IUserModel>> GetAll();
-        Task<IUserModel> GetById(Guid id);
-        Task<User> Create(RegisterModel model);
-        Task<bool> UpdateAsync(Guid id, UpdateModel model, string password = null);
+        Task<IUserModel> Authenticate(string username, string password);
+        Task<List<IUserModel>> GetAll(IFiltering filterObj, ISorting sortObj, IPaging pagingObj);
+        Task<IUserModel> GetByIdAsync(Guid id);
+        Task<IUserModel> CreateAsync(IUserModel model, string userPassword);
+        Task<bool> UpdateAsync(Guid id, IUserModel user, string password = null);
         Task<bool> DeleteAsync(Guid id);
-        string GetToken(User user);
+        string GetToken(IUserModel user);
+        void Dispose(bool disposing);
     }
 }

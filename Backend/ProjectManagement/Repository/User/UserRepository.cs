@@ -1,8 +1,11 @@
-﻿using Common.Helpers;
+﻿using AutoMapper;
+using Common.Helpers;
+using Common.Interface_Sort_Pag_Flt;
 using DAL;
 using DAL.Entities;
 using Microsoft.EntityFrameworkCore;
-using Repository.Common.User;
+using Model.Common;
+using Repository.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,47 +13,55 @@ using System.Threading.Tasks;
 
 namespace Repository.User
 {
-    public class UserRepository : IUserRepository
+    public class UserRepository : IUserRepository, IDisposable
     {
-        private ProjectManagementContext _context;
+        private ProjectManagementContext context;
+        private readonly IUnitOfWork unitOfWork;
+        private readonly IMapper mapper;
 
-        public UserRepository(ProjectManagementContext context)
+        public UserRepository(ProjectManagementContext context, IUnitOfWork unitOfWork, IMapper mapper)
         {
-            _context = context;
+            this.unitOfWork = unitOfWork;
+            this.mapper = mapper;
+            this.context = context;
         }
 
-        public async Task<DAL.Entities.User> GetUser(string username)
+        public async Task<IUserModel> GetUserAsync(string username)
         {
-            var user = await _context.Users.SingleOrDefaultAsync(x => x.Username == username);
-            await _context.UserRole.FirstOrDefaultAsync(u => u.UserId == user.Id);
-            return user;
+            var user = await context.Users.SingleOrDefaultAsync(x => x.Username == username);
+            await context.UserRole.FirstOrDefaultAsync(u => u.UserId == user.Id);
+            return mapper.Map<IUserModel>(user);
         }
 
-        public async Task<List<DAL.Entities.User>> GetAll()
+        public async Task<List<IUserModel>> GetAllAsync(IFiltering filterObj, ISorting sortObj, IPaging pagingObj)
         {
-            return await _context.Users.ToListAsync();
+            //var allUsers = await unitOfWork.UserRepository.Get(pagingObj, filter: w => w.FirstName == filterObj.FilterValue, sortObj, orderBy: q => q.OrderBy(d => d.FirstName),
+            //    orderByDescending: q => q.OrderByDescending(d => d.FirstName));
+            var allUsers = await unitOfWork.UserRepository.Get(null, null, null);
+            return mapper.Map<List<IUserModel>>(allUsers);
         }
 
-        public async Task<DAL.Entities.User> GetById(Guid id)
+    public async Task<IUserModel> GetByIdAsync(Guid id)
         {
-            return await _context.Users.FindAsync(id);
+            var user = await unitOfWork.UserRepository.GetByID(id);
+            return mapper.Map<IUserModel>(user);
         }
 
         public async Task<bool> DeleteAsync(Guid id)
         {
-            var user = await _context.Users.FindAsync(id);
+            var user = await unitOfWork.UserRepository.GetByID(id);
             if (user != null)
             {
-               _context.Users.Remove(user);
-               await _context.SaveChangesAsync();
+               unitOfWork.UserRepository.Delete(user);
+               await unitOfWork.SaveAsync(); 
                return true;
             }
             return false;
         }
 
-        public async Task<bool> UpdateAsync(DAL.Entities.User userParam, string password = null)
+        public async Task<bool> UpdateAsync(IUserModel userParam, string password = null)
         {
-            var user = await GetById(userParam.Id);
+            var user = await unitOfWork.UserRepository.GetByID(userParam.Id);
 
             if (user == null)
             {
@@ -59,7 +70,7 @@ namespace Repository.User
 
             if (!string.IsNullOrWhiteSpace(userParam.Username) && userParam.Username != user.Username)
             {
-                if (await _context.Users.AnyAsync(x => x.Username == userParam.Username))
+                if (await context.Users.AnyAsync(x => x.Username == userParam.Username))
                 {
                     throw new AppException("Username " + userParam.Username + " is already taken");
                 }
@@ -86,19 +97,22 @@ namespace Repository.User
                 user.PasswordSalt = passwordSalt;
             }
 
-            _context.Users.Update(user);
-            await _context.SaveChangesAsync();
+            context.Users.Update(user);
+            await context.SaveChangesAsync();
             return true;
         }
 
-        public async Task<DAL.Entities.User> Create(DAL.Entities.User user, string password)
+        public async Task<IUserModel> CreateAsync(IUserModel user, string password)
         {
+            DAL.Entities.User newUser = mapper.Map<DAL.Entities.User>(user);
+            var allUsers = await unitOfWork.UserRepository.Get(null, null, null);
+
             if (string.IsNullOrWhiteSpace(password))
             {
                 throw new AppException("Password is required");
             }
 
-            if (_context.Users.Any(x => x.Username == user.Username))
+            if (allUsers.Any(x => x.Username == user.Username))
             {
                 throw new AppException("Username \"" + user.Username + "\" is already taken");
             }
@@ -106,26 +120,45 @@ namespace Repository.User
             byte[] passwordHash, passwordSalt;
             CreatePasswordHash(password, out passwordHash, out passwordSalt);
 
-            user.Id = Guid.NewGuid();
-            user.DateCreated = DateTime.Now;
-            user.DateUpdated = DateTime.Now;
-            user.PasswordHash = passwordHash;
-            user.PasswordSalt = passwordSalt;
+            newUser.Id = Guid.NewGuid();
+            newUser.DateCreated = DateTime.Now;
+            newUser.DateUpdated = DateTime.Now;
+            newUser.PasswordHash = passwordHash;
+            newUser.PasswordSalt = passwordSalt;
 
-            var userROle = new UserRole {
+            var userRole = new UserRole {
                 Id = Guid.NewGuid(),
                 DateUpdated = DateTime.Now,
                 DateCreated = DateTime.Now,
                 Name = Role.User,
                 Abrv = Role.User,
-                UserId = user.Id,
+                UserId = newUser.Id,
              };
 
-            await _context.UserRole.AddAsync(userROle);
-            await _context.Users.AddAsync(user);
-            await _context.SaveChangesAsync();
+            await unitOfWork.UserRepository.Create(newUser);
+            await unitOfWork.UserRole.Create(userRole);
+            await unitOfWork.SaveAsync();
 
-            return user;
+            return mapper.Map<IUserModel>(newUser);
+        }
+
+        private bool disposed = false;
+        public virtual void Dispose(bool disposing)
+        {
+            if (!this.disposed)
+            {
+                if (disposing)
+                {
+                    context.Dispose();
+                }
+            }
+            this.disposed = true;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
         private static void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)

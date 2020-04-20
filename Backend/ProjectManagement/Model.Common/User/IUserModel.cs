@@ -1,6 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Model.Common.User;
+using System;
+
 
 namespace Model.Common
 {
@@ -10,7 +10,7 @@ namespace Model.Common
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Username { get; set; }
-        public string Role { get; set; }
+        public IUserRoleModel UserRole { get; set; }
         public byte[] PasswordHash { get; set; }
         public byte[] PasswordSalt { get; set; }
     }

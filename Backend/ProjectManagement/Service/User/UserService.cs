@@ -1,11 +1,12 @@
 ﻿using AutoMapper;
+using Common.Interface_Sort_Pag_Flt;
 using DAL.Entities;
 using Helpers;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Model;
 using Model.Common;
-using Repository.Common.User;
+using Repository.Common;
 using Service.Common;
 using System;
 using System.Collections.Generic;
@@ -16,28 +17,27 @@ using System.Threading.Tasks;
 
 namespace Service
 {
-
     public class UserService : IUserService
     {
-        private IUserRepository _userRepository;
-        private IMapper _mapper;
-        private readonly AppSettings _appSettings;
+        private IUserRepository userRepository;
+        private IMapper mapper;
+        private readonly AppSettings appSettings;
 
         public UserService(IUserRepository userRepository, IMapper mapper, IOptions<AppSettings> appSettings)
         {
-            _userRepository = userRepository;
-            _mapper = mapper;
-            _appSettings = appSettings.Value;
+            this.userRepository = userRepository;
+            this.mapper = mapper;
+            this.appSettings = appSettings.Value;
         }
 
-        public async Task<User> Authenticate(string username, string password)
+        public async Task<IUserModel> Authenticate(string username, string password)
         {
             if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
             {
                 return null;
             }
 
-            var user = await _userRepository.GetUser(username);
+            var user = await userRepository.GetUserAsync(username);
 
             if (user == null)
             {
@@ -49,14 +49,13 @@ namespace Service
                 return null;
             }
 
-            return user; 
-      
+            return user;
         }
 
-        public string GetToken(User user)
+        public string GetToken(IUserModel user)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
+            var key = Encoding.ASCII.GetBytes(appSettings.Secret);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new Claim[]
@@ -73,35 +72,36 @@ namespace Service
             return tokenString;
         }
 
-        public async Task<List<IUserModel>> GetAll()
+        public async Task<List<IUserModel>> GetAll(IFiltering filterObj, ISorting sortObj, IPaging pagingObj)
         {
-            var users = await _userRepository.GetAll();
-            return _mapper.Map<List<IUserModel>>(users);
+            var users = await userRepository.GetAllAsync(filterObj, sortObj, pagingObj);
+            return mapper.Map<List<IUserModel>>(users);
         }
 
-        public async Task<IUserModel> GetById(Guid id)
+        public async Task<IUserModel> GetByIdAsync(Guid id)
         {
-            var user = await _userRepository.GetById(id);
-            return _mapper.Map<IUserModel>(user);
+            return await userRepository.GetByIdAsync(id);
         }
 
-        public async Task<User> Create(RegisterModel model)
+        public async Task<IUserModel> CreateAsync(IUserModel model, string userPassword)
         {
-            var password = model.Password;
-            var user = _mapper.Map<User>(model);
-            return await _userRepository.Create(user, password);
+            return await userRepository.CreateAsync(model, userPassword);
         }
 
-        public async Task<bool> UpdateAsync(Guid id, UpdateModel model, string password = null)
+        public async Task<bool> UpdateAsync(Guid id, IUserModel user, string password = null)
         {
-            var user = _mapper.Map<User>(model);
             user.Id = id;
-            return await _userRepository.UpdateAsync(user, password);
+            return await userRepository.UpdateAsync(user, password);
         }
 
         public async Task<bool> DeleteAsync(Guid id)
         {
-             return await _userRepository.DeleteAsync(id);
+            return await userRepository.DeleteAsync(id);
+        }
+
+        public virtual void Dispose(bool disposing)
+        {
+            userRepository.Dispose(disposing);
         }
 
         private static bool VerifyPasswordHash(string password, byte[] storedHash, byte[] storedSalt)
