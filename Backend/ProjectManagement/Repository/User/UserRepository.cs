@@ -70,7 +70,8 @@ namespace Repository.User
 
             if (!string.IsNullOrWhiteSpace(userParam.Username) && userParam.Username != user.Username)
             {
-                if (await context.Users.AnyAsync(x => x.Username == userParam.Username))
+                var allUsers = await unitOfWork.UserRepository.Get(null, null, null);
+                if (allUsers.Any(x => x.Username == userParam.Username))
                 {
                     throw new AppException("Username " + userParam.Username + " is already taken");
                 }
@@ -97,8 +98,8 @@ namespace Repository.User
                 user.PasswordSalt = passwordSalt;
             }
 
-            context.Users.Update(user);
-            await context.SaveChangesAsync();
+            unitOfWork.UserRepository.Update(user);
+            await unitOfWork.SaveAsync();
             return true;
         }
 

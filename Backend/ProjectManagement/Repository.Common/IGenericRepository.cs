@@ -19,5 +19,6 @@ namespace Repository.Common
         void Delete(object id);
         void Delete(TEntity entityToDelete);
         void Update(TEntity entityToUpdate);
+        //Task<TEntity> GetByUserName(object username);
     }
 }
