@@ -1,4 +1,5 @@
-﻿using Model.Common.User;
+﻿using Model.Common.ProjectManagement;
+using Model.Common.User;
 using System;
 
 
@@ -11,6 +12,7 @@ namespace Model.Common
         public string LastName { get; set; }
         public string Username { get; set; }
         public IUserRoleModel UserRole { get; set; }
+        public IOrganizationRoleModel OrganizationRole { get; set; }
         public byte[] PasswordHash { get; set; }
         public byte[] PasswordSalt { get; set; }
     }

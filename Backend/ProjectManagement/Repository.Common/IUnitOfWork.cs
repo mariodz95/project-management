@@ -8,6 +8,8 @@ namespace Repository.Common
     {
         IGenericRepository<DAL.Entities.User> UserRepository { get; }
         IGenericRepository<UserRole> UserRole { get; }
+        IGenericRepository<Organization> OrganizationRepository { get; }
+        IGenericRepository<OrganizationRole> OrganizationRoleRepository { get; }
         Task<int> SaveAsync();
     }
 }

@@ -30,6 +30,8 @@ namespace Repository.User
         {
             var user = await context.Users.SingleOrDefaultAsync(x => x.Username == username);
             await context.UserRole.FirstOrDefaultAsync(u => u.UserId == user.Id);
+            var test = await context.OrganizationRole.FirstOrDefaultAsync(u => u.UserId == user.Id);
+            user.OrganizationRole = await context.OrganizationRole.FirstOrDefaultAsync(u => u.UserId == user.Id);
             return mapper.Map<IUserModel>(user);
         }
 
@@ -106,13 +108,13 @@ namespace Repository.User
         public async Task<IUserModel> CreateAsync(IUserModel user, string password)
         {
             DAL.Entities.User newUser = mapper.Map<DAL.Entities.User>(user);
-            var allUsers = await unitOfWork.UserRepository.Get(null, null, null);
 
             if (string.IsNullOrWhiteSpace(password))
             {
                 throw new AppException("Password is required");
             }
 
+            var allUsers = await unitOfWork.UserRepository.Get(null, null, null);
             if (allUsers.Any(x => x.Username == user.Username))
             {
                 throw new AppException("Username \"" + user.Username + "\" is already taken");

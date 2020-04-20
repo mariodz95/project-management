@@ -61,7 +61,8 @@ namespace Service
                 Subject = new ClaimsIdentity(new Claim[]
                 {
                     new Claim(ClaimTypes.Name, user.Id.ToString()),
-                    new Claim(ClaimTypes.Role, user.UserRole.Abrv)
+                    new Claim(ClaimTypes.Role, user.UserRole.Abrv),
+                    user.OrganizationRole != null ? new Claim(ClaimTypes.Role, user.OrganizationRole.Abrv) : null,
                 }),
                 Expires = DateTime.UtcNow.AddHours(9),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
@@ -99,9 +100,9 @@ namespace Service
             return await userRepository.DeleteAsync(id);
         }
 
-        public virtual void Dispose(bool disposing)
+        public virtual void Dispose(bool dispose)
         {
-            userRepository.Dispose(disposing);
+            userRepository.Dispose(dispose);
         }
 
         private static bool VerifyPasswordHash(string password, byte[] storedHash, byte[] storedSalt)

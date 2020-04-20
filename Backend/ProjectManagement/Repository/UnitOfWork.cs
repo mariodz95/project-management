@@ -11,6 +11,8 @@ namespace Repository
         private ProjectManagementContext context;
         private IGenericRepository<DAL.Entities.User> userRepository;
         private IGenericRepository<UserRole> userRoleRepository;
+        private IGenericRepository<Organization> organizationRepository;
+        private IGenericRepository<OrganizationRole> organizationRoleRepository;
 
         public UnitOfWork(ProjectManagementContext context)
         {
@@ -42,6 +44,33 @@ namespace Repository
                 return userRoleRepository;
             }
         }
+
+        public IGenericRepository<Organization> OrganizationRepository
+        {
+            get
+            {
+
+                if (this.organizationRepository == null)
+                {
+                    this.organizationRepository = new GenericRepository<Organization>(context);
+                }
+                return organizationRepository;
+            }
+        }
+
+        public IGenericRepository<OrganizationRole> OrganizationRoleRepository
+        {
+            get
+            {
+
+                if (this.organizationRoleRepository == null)
+                {
+                    this.organizationRoleRepository = new GenericRepository<OrganizationRole>(context);
+                }
+                return organizationRoleRepository;
+            }
+        }
+
 
         public async Task<int> SaveAsync()
         {

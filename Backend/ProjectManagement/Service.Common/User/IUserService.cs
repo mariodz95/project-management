@@ -17,6 +17,6 @@ namespace Service.Common
         Task<bool> UpdateAsync(Guid id, IUserModel user, string password = null);
         Task<bool> DeleteAsync(Guid id);
         string GetToken(IUserModel user);
-        void Dispose(bool disposing);
+        void Dispose(bool dispose);
     }
 }

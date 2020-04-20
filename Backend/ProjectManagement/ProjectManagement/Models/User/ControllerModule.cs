@@ -1,6 +1,8 @@
 ﻿using Model;
 using AutoMapper;
 using Model.Common;
+using ProjectManagement.Models.ProjectManagement;
+using Model.Common.ProjectManagement;
 
 namespace ProjectManagement.Models
 {
@@ -11,6 +13,7 @@ namespace ProjectManagement.Models
             CreateMap<UserViewModel, UserModel>().ReverseMap();
             CreateMap<RegisterViewModel, IUserModel>().ReverseMap();
             CreateMap<UpdateViewModel, IUserModel>().ReverseMap();
+            CreateMap<OrganizationViewModel, IOrganizationModel>().ReverseMap();
         }
     }
 }

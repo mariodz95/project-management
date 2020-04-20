@@ -1,4 +1,5 @@
 ﻿using Model.Common;
+using Model.Common.ProjectManagement;
 using Model.Common.User;
 using Model.User;
 using System;
@@ -14,5 +15,6 @@ namespace Model
         public IUserRoleModel UserRole { get; set; }
         public byte[] PasswordHash { get; set; }
         public byte[] PasswordSalt { get; set; }
+        public IOrganizationRoleModel OrganizationRole { get; set; }
     }
 }

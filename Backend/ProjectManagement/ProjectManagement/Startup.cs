@@ -23,6 +23,10 @@ using Repository.Common;
 using System;
 using ProjectManagement.Models;
 using Repository;
+using Repository.ProjectManagement;
+using Repository.Common.ProjectManagement;
+using Service.ProjectManagement;
+using Service.Common.ProjectManagement;
 
 namespace ProjectManagement
 {
@@ -38,6 +42,10 @@ namespace ProjectManagement
             // This will all go in the ROOT CONTAINER and is NOT TENANT SPECIFIC.
             builder.RegisterType<UserService>().As<IUserService>();
             builder.RegisterType<UserRepository>().As<IUserRepository>();
+
+            builder.RegisterType<OrganizationRepository>().As<IOrganizationRepositroy>();
+            builder.RegisterType<OrganizationService>().As<IOrganizationService>();
+
             builder.RegisterType<UnitOfWork>().As<IUnitOfWork>();
 
             var config = new MapperConfiguration(cfg =>

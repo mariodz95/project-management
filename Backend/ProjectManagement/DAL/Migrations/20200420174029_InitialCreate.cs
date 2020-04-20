@@ -32,7 +32,9 @@ namespace DAL.Migrations
                     DateCreated = table.Column<DateTime>(nullable: false),
                     DateUpdated = table.Column<DateTime>(nullable: false),
                     Name = table.Column<string>(nullable: true),
-                    Abrv = table.Column<string>(nullable: true)
+                    Abrv = table.Column<string>(nullable: true),
+                    OrganizationId = table.Column<Guid>(nullable: false),
+                    UserId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {

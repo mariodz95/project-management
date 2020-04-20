@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DAL.Entities;
 using Model.Common;
+using Model.Common.ProjectManagement;
 using Model.Common.User;
 
 namespace Common.Helpers
@@ -11,6 +12,8 @@ namespace Common.Helpers
         {
             CreateMap<User, IUserModel>().ReverseMap();
             CreateMap<UserRole, IUserRoleModel>().ReverseMap();
+            CreateMap<Organization, IOrganizationModel>().ReverseMap();
+            CreateMap<OrganizationRole, IOrganizationRoleModel>().ReverseMap();
         }
     }
 }
