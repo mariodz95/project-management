@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace Repository.User
 {
-    public class UserRepository : IUserRepository, IDisposable
+    public class UserRepository : IUserRepository
     {
         private ProjectManagementContext context;
         private readonly IUnitOfWork unitOfWork;
@@ -143,25 +143,6 @@ namespace Repository.User
             await unitOfWork.SaveAsync();
 
             return mapper.Map<IUserModel>(newUser);
-        }
-
-        private bool disposed = false;
-        public virtual void Dispose(bool disposing)
-        {
-            if (!this.disposed)
-            {
-                if (disposing)
-                {
-                    context.Dispose();
-                }
-            }
-            this.disposed = true;
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
         }
 
         private static void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)

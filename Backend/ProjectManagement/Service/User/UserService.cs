@@ -6,6 +6,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Model;
 using Model.Common;
+using Model.Common.ProjectManagement;
 using Repository.Common;
 using Service.Common;
 using System;
@@ -100,10 +101,6 @@ namespace Service
             return await userRepository.DeleteAsync(id);
         }
 
-        public virtual void Dispose(bool dispose)
-        {
-            userRepository.Dispose(dispose);
-        }
 
         private static bool VerifyPasswordHash(string password, byte[] storedHash, byte[] storedSalt)
         {

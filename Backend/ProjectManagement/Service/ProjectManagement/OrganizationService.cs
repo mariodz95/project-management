@@ -27,14 +27,17 @@ namespace Service.ProjectManagement
             return await organizationRepository.CreateAsync(userId, organization);
         }
 
-        public async Task<List<IOrganizationModel>> GetAll(IFiltering filterObj, ISorting sortObj, IPaging pagingObj)
+        public async Task<List<IOrganizationModel>> GetAll()
         {
-            var organizations = await organizationRepository.GetAllAsync(filterObj, sortObj, pagingObj);
-            return mapper.Map<List<IOrganizationModel>>(organizations);
+            var organizations = await organizationRepository.GetAllAsync();
+            return organizations;
         }
-        public virtual void Dispose()
-        {
-            organizationRepository.Dispose();
-        }
+
+        //public async Task<IOrganizationModel> GetOrganizationByUserIdAsync(Guid userId)
+        //{
+        //    var organization = await organizationRepository.GetOrganizationByUserIdAsync(userId);
+        //    return organization;
+        //}
+
     }
 }

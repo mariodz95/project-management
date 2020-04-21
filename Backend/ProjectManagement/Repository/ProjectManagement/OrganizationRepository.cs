@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using Common.Helpers;
 using Common.Interface_Sort_Pag_Flt;
+using DAL;
 using DAL.Entities;
+using Microsoft.EntityFrameworkCore;
 using Model.Common.ProjectManagement;
 using Repository.Common;
 using Repository.Common.ProjectManagement;
@@ -64,11 +66,11 @@ namespace Repository.ProjectManagement
             return mapper.Map<IOrganizationModel>(newOrganization);
         }
 
-        public async Task<List<IOrganizationModel>> GetAllAsync(IFiltering filterObj, ISorting sortObj, IPaging pagingObj)
+        public async Task<List<IOrganizationModel>> GetAllAsync()
         {
             //var allUsers = await unitOfWork.UserRepository.Get(pagingObj, filter: w => w.FirstName == filterObj.FilterValue, sortObj, orderBy: q => q.OrderBy(d => d.FirstName),
             //    orderByDescending: q => q.OrderByDescending(d => d.FirstName));
-            var allOrganizations = await unitOfWork.OrganizationRepository.Get(null, null, null);
+            var allOrganizations = await unitOfWork.OrganizationRepository.GetAll();
             return mapper.Map<List<IOrganizationModel>>(allOrganizations);
         }
 
@@ -84,9 +86,16 @@ namespace Repository.ProjectManagement
             return false;
         }
 
-        public void Dispose()
-        {
-            unitOfWork.Dispose();
-        }
+        //public async Task<IOrganizationModel> GetOrganizationByUserIdAsync(Guid userId)
+        //{
+        //    var organization = await context.Organization.FirstOrDefaultAsync(o => o.UserId == userId);
+        //    if(organization == null)
+        //    {
+        //        throw new AppException("User doenst have organization");
+        //    }
+
+        //    return mapper.Map<IOrganizationModel>(organization);
+        //}
+
     }
 }

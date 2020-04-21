@@ -51,6 +51,11 @@ namespace Repository
             }
         }
 
+        public async Task<IEnumerable<TEntity>> GetAll()
+        {
+            return await dbSet.ToListAsync();
+        }
+
         public async Task<TEntity> GetByID(object id)
         {
             return await dbSet.FindAsync(id);
@@ -62,10 +67,11 @@ namespace Repository
             return entity;
         }
 
-        public virtual void Delete(object id)
+        public async Task<TEntity> Delete(object id)
         {
-            TEntity entityToDelete = dbSet.Find(id);
+            TEntity entityToDelete = await dbSet.FindAsync(id);
             Delete(entityToDelete);
+            return entityToDelete;
         }
 
         public virtual void Delete(TEntity entityToDelete)

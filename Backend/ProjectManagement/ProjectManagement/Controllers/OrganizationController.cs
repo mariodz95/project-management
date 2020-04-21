@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace ProjectManagement.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [ApiController]
     [Route("[controller]")]
     public class OrganizationController : Controller
@@ -27,8 +27,8 @@ namespace ProjectManagement.Controllers
             this.mapper = mapper;
         }
 
-        [Authorize(Roles = Role.User)]
-        [HttpPost]
+        [AllowAnonymous]
+        [HttpPost("[action]")]
         public async Task<IActionResult> CreateOrganization([FromBody]OrganizationViewModel organization, Guid userId)
         {
             try
@@ -42,14 +42,9 @@ namespace ProjectManagement.Controllers
                 return BadRequest(new { message = ex.Message });
             }
         }
-        protected override void Dispose(bool disposing)
-        {
-            organizationService.Dispose();
-            base.Dispose(disposing);
-        }
 
-        [Authorize(Roles = Role.Organization)]
-        [HttpGet]
+        [AllowAnonymous]
+        [HttpGet("[action]")]
         public async Task<IActionResult> GetAll(int pageSize, int totalPages, string sort = null, string search = null, int? pageNumber = null)
         {
             IFiltering filtering = new Filtering
@@ -69,9 +64,24 @@ namespace ProjectManagement.Controllers
                 TotalPages = totalPages
             };
 
-            var allOrganizations = await organizationService.GetAll(filtering, sorting, paging);
+            var allOrganizations = await organizationService.GetAll();
             return Ok(allOrganizations);
         }
 
+        //[AllowAnonymous]
+        //[HttpGet("[action]")]
+        //public async Task<IActionResult> GetOrganizationByZserId(Guid userId)
+        //{
+        //    try
+        //    {
+        //        var organization = await organizationService.GetOrganizationByUserIdAsync(userId);
+        //        return Ok(organization);
+        //    }
+        //    catch (AppException ex)
+        //    {
+        //        return BadRequest(new { message = ex.Message });
+        //    }
+
+        //}
     }
 }

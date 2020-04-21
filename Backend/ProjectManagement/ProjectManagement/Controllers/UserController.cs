@@ -126,10 +126,5 @@ namespace WebApi.Controllers
             return Ok(deleted);
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            userService.Dispose(disposing);
-            base.Dispose(disposing);
-        }
     }
 }

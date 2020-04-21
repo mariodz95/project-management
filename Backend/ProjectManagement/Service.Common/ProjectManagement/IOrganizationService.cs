@@ -10,7 +10,7 @@ namespace Service.Common.ProjectManagement
     public interface IOrganizationService
     {
         Task<IOrganizationModel> CreateAsync(Guid userId, IOrganizationModel organization);
-        Task<List<IOrganizationModel>> GetAll(IFiltering filterObj, ISorting sortObj, IPaging pagingObj);
-        void Dispose();
+        Task<List<IOrganizationModel>> GetAll();
+        //Task<IOrganizationModel> GetOrganizationByUserIdAsync(Guid userId);
     }
 }

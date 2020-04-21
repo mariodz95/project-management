@@ -2,6 +2,7 @@
 using DAL.Entities;
 using Model;
 using Model.Common;
+using Model.Common.ProjectManagement;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -17,6 +18,6 @@ namespace Service.Common
         Task<bool> UpdateAsync(Guid id, IUserModel user, string password = null);
         Task<bool> DeleteAsync(Guid id);
         string GetToken(IUserModel user);
-        void Dispose(bool dispose);
+
     }
 }
