@@ -1,13 +1,14 @@
 import React from "react";
 import { Router, Route, Switch, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
-
-import { history } from "./helpers/history";
-import { alertActions } from "./actions/alertActions";
-import { PrivateRoute } from "./components/privateRoute";
-import { HomePage } from "./HomePage/HomePage";
-import { LoginPage } from "./LoginPage/LoginPage";
-import { RegisterPage } from "./RegisterPage/RegisterPage";
+import PropTypes from "prop-types";
+import { history } from "../helpers/history";
+import { clear } from "../actions/alertActions";
+import { PrivateRoute } from "../components/privateRoute";
+import { HomePage } from "../HomePage/HomePage";
+import { LoginPage } from "../LoginPage/LoginPage";
+import { RegisterPage } from "../RegisterPage/RegisterPage";
+import "../styles/App.css";
 
 class App extends React.Component {
   constructor(props) {
@@ -15,7 +16,7 @@ class App extends React.Component {
 
     history.listen((location, action) => {
       // clear alert on location change
-      this.props.clearAlerts();
+      this.props.clear();
     });
   }
 
@@ -33,14 +34,16 @@ class App extends React.Component {
   }
 }
 
-function mapState(state) {
-  const { alert } = state;
-  return { alert };
-}
-
-const actionCreators = {
-  clearAlerts: alertActions.clear,
+App.propTypes = {
+  clear: PropTypes.func.isRequired,
 };
 
-const connectedApp = connect(mapState, actionCreators)(App);
+const mapStateToProps = (state) => (
+  console.log("state", state),
+  {
+    clear: state.clear,
+  }
+);
+
+const connectedApp = connect(mapStateToProps, { clear })(App);
 export { connectedApp as App };
