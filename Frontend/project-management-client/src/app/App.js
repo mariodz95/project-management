@@ -39,9 +39,9 @@ App.propTypes = {
 };
 
 const mapStateToProps = (state) => (
-  console.log("state", state),
+  console.log("state,", state),
   {
-    clear: state.clear,
+    clear: state.alert,
   }
 );
 

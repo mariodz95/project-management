@@ -1,18 +1,15 @@
 import { alertConstants } from "../constants/alertConstants";
 
-export const alertActions = {
-  success,
-  error,
-};
+export const displaySuccess = (message) => ({
+  type: alertConstants.SUCCESS,
+  message,
+});
 
-function success(message) {
-  return { type: alertConstants.SUCCESS, message };
-}
+export const displayError = (message) => ({
+  type: alertConstants.ERROR,
+  message,
+});
 
-function error(message) {
-  return { type: alertConstants.ERROR, message };
-}
-
-export const clear = () => {
-  return { type: alertConstants.CLEAR };
-};
+export const clear = () => ({
+  type: alertConstants.CLEAR,
+});

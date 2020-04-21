@@ -1,8 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
+import PropTypes from "prop-types";
 
-import { userActions, getAll } from "../actions/userActions";
+import { getAll, _delete, logout } from "../actions/userActions";
 
 class HomePage extends React.Component {
   componentDidMount() {
@@ -25,18 +26,15 @@ class HomePage extends React.Component {
   }
 }
 
-function mapState(state) {
-  const { users, authentication } = state;
-  const { user } = authentication;
-  return { user, users };
-}
-
-const actionCreators = {
-  getUsers: userActions.getAll,
-  deleteUser: userActions.delete,
+HomePage.propTypes = {
+  logout: PropTypes.func.isRequired,
 };
 
-const connectedHomePage = connect(mapState, { actionCreators, getAll })(
+const mapStateToProps = (state) => ({
+  users: state.authentication.users,
+});
+
+const connectedHomePage = connect(mapStateToProps, { _delete, getAll, logout })(
   HomePage
 );
 export { connectedHomePage as HomePage };

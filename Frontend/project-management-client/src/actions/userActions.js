@@ -1,11 +1,7 @@
 import { userConstants } from "../constants/userConstants";
 import { userService } from "../services/userService";
-import { alertActions } from "./alertActions";
+import { displayError, displaySuccess } from "./alertActions";
 import { history } from "../helpers/history";
-
-export const userActions = {
-  delete: _delete,
-};
 
 export const login = (username, password) => (dispatch) => {
   dispatch(request({ username }));
@@ -17,7 +13,7 @@ export const login = (username, password) => (dispatch) => {
     },
     (error) => {
       dispatch(failure(error));
-      dispatch(alertActions.error(error));
+      dispatch(displayError.error(error));
     }
   );
 
@@ -39,11 +35,11 @@ export const register = (user) => (dispatch) => {
     (user) => {
       dispatch(success());
       history.push("/login");
-      dispatch(alertActions.success("Registration successful"));
+      dispatch(displaySuccess("Registration successful"));
     },
     (error) => {
       dispatch(failure(error.toString()));
-      dispatch(alertActions.error(error.toString()));
+      dispatch(displayError(error.toString()));
     }
   );
 
@@ -70,7 +66,7 @@ export const getAll = () => (dispatch) => {
     (users) => dispatch(success(users)),
     (error) => {
       dispatch(failure(error));
-      dispatch(alertActions.error(error));
+      dispatch(displayError(error));
     }
   );
 
@@ -86,15 +82,13 @@ export const getAll = () => (dispatch) => {
 };
 
 // prefixed function name with underscore because delete is a reserved word in javascript
-function _delete(id) {
-  return (dispatch) => {
-    dispatch(request(id));
+export const _delete = (id) => (dispatch) => {
+  dispatch(request(id));
 
-    userService.delete(id).then(
-      (user) => dispatch(success(id)),
-      (error) => dispatch(failure(id, error.toString()))
-    );
-  };
+  userService.delete(id).then(
+    (user) => dispatch(success(id)),
+    (error) => dispatch(failure(id, error.toString()))
+  );
 
   function request(id) {
     return { type: userConstants.DELETE_REQUEST, id };
@@ -105,4 +99,4 @@ function _delete(id) {
   function failure(id, error) {
     return { type: userConstants.DELETE_FAILURE, id, error };
   }
-}
+};
