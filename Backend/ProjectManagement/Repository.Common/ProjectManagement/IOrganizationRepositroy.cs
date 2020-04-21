@@ -10,5 +10,6 @@ namespace Repository.Common.ProjectManagement
     {
         Task<IOrganizationModel> CreateAsync(Guid userId, IOrganizationModel organization);
         Task<List<IOrganizationModel>> GetAllAsync(IFiltering filterObj, ISorting sortObj, IPaging pagingObj);
+        Task<bool> DeleteAsync(Guid id);
     }
 }

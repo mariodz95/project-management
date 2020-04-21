@@ -72,6 +72,18 @@ namespace Repository.ProjectManagement
             return mapper.Map<List<IOrganizationModel>>(allOrganizations);
         }
 
+        public async Task<bool> DeleteAsync(Guid id)
+        {
+            var user = await unitOfWork.OrganizationRepository.GetByID(id);
+            if (user != null)
+            {
+                unitOfWork.OrganizationRepository.Delete(user);
+                await unitOfWork.SaveAsync();
+                return true;
+            }
+            return false;
+        }
+
         public void Dispose()
         {
             unitOfWork.Dispose();
