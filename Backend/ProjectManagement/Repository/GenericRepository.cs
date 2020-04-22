@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Repository
@@ -25,7 +24,8 @@ namespace Repository
         public async Task<IEnumerable<TEntity>> Get(
            IPaging pagingObj,
            Expression<Func<TEntity, bool>> filter, ISorting sortObj,
-           Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderByDescending = null,
+           Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null, 
+           Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderByDescending = null,
            string includeProperties = "")
         {
             IQueryable<TEntity> query = dbSet;

@@ -1,9 +1,6 @@
 ﻿using AutoMapper;
 using Common.Helpers;
-using Common.Interface_Sort_Pag_Flt;
-using DAL;
 using DAL.Entities;
-using Microsoft.EntityFrameworkCore;
 using Model.Common.ProjectManagement;
 using Repository.Common;
 using Repository.Common.ProjectManagement;

@@ -1,0 +1,11 @@
+.Form {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  width: 500px;
+  padding: 50px;
+  border-radius: 25px;
+  border: 1px solid #ccc;
+}

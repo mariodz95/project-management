@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Model.Common.ProjectManagement;
 using ProjectManagement.Models.ProjectManagement;
-using Service.Common;
 using Service.Common.ProjectManagement;
 using System;
 using System.Threading.Tasks;
@@ -28,13 +27,13 @@ namespace ProjectManagement.Controllers
         }
 
         [AllowAnonymous]
-        [HttpPost("[action]")]
-        public async Task<IActionResult> CreateOrganization([FromBody]OrganizationViewModel organization, Guid userId)
+        [HttpPost("{id}")]
+        public async Task<IActionResult> CreateOrganization(Guid id, [FromBody]OrganizationViewModel model)
         {
             try
             {
-                var newOrganization = mapper.Map<IOrganizationModel>(organization);
-                await organizationService.CreateAsync(userId, newOrganization);
+                var newOrganization = mapper.Map<IOrganizationModel>(model);
+                await organizationService.CreateAsync(id, newOrganization);
                 return Ok(newOrganization);
             }
             catch (AppException ex)

@@ -13,7 +13,7 @@ export const login = (username, password) => (dispatch) => {
     },
     (error) => {
       dispatch(failure(error));
-      dispatch(displayError.error(error));
+      dispatch(displayError(error));
     }
   );
 
