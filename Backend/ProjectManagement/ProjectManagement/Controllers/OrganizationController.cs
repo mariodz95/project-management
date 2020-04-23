@@ -28,12 +28,12 @@ namespace ProjectManagement.Controllers
 
         [AllowAnonymous]
         [HttpPost("{id}")]
-        public async Task<IActionResult> CreateOrganization(Guid id, [FromBody]OrganizationViewModel model)
+        public async Task<IActionResult> CreateOrganization(Guid id, [FromBody]OrganizationViewModel newOrganization)
         {
             try
             {
-                var newOrganization = mapper.Map<IOrganizationModel>(model);
-                await organizationService.CreateAsync(id, newOrganization);
+                var organization = mapper.Map<IOrganizationModel>(newOrganization);
+                await organizationService.CreateAsync(id, organization);
                 return Ok(newOrganization);
             }
             catch (AppException ex)

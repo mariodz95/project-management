@@ -1,4 +1,3 @@
-import React from "react";
 import { authHeader } from "../helpers/authHeader";
 
 export const organizationService = {

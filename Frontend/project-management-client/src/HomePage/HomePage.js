@@ -8,19 +8,13 @@ import { NavigationBar } from "../NavigationBar/NavigationBar";
 
 class HomePage extends React.Component {
   componentDidMount() {
-    // this.props.getAll();
     if (this.props.allOrganizations === undefined) {
       this.props.getAllOrganizations();
     }
   }
 
-  handleDeleteUser(id) {
-    return (e) => this.props.deleteUser(id);
-  }
-
   render() {
     const { user } = this.props;
-    console.log("user", user);
     return (
       <React.Fragment>
         <NavigationBar />
@@ -51,6 +45,7 @@ HomePage.propTypes = {
   logout: PropTypes.func.isRequired,
   getAllOrganizations: PropTypes.func.isRequired,
   allOrganizations: PropTypes.array.isRequired,
+  createOrganization: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({

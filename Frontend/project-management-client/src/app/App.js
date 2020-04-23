@@ -10,7 +10,6 @@ import { HomePage } from "../HomePage/HomePage";
 import { RegisterPage } from "../RegisterPage/RegisterPage";
 import { OrganizationPage } from "../organization/OrganizationPage";
 import { CreateOrganizationPage } from "../organization/CreateOrganizationPage";
-import Container from "react-bootstrap/Container";
 
 import "../styles/App.css";
 
@@ -26,21 +25,19 @@ class App extends React.Component {
 
   render() {
     return (
-      <Container className="container">
-        <Router history={history}>
-          <Switch>
-            <PrivateRoute exact path="/" component={HomePage} />
-            <Route path="/login" component={LoginPage} />
-            <Route path="/register" component={RegisterPage} />
-            <Route path="/organization" component={OrganizationPage} />
-            <Route
-              path="/createorganization"
-              component={CreateOrganizationPage}
-            />
-            <Redirect from="*" to="/" />
-          </Switch>
-        </Router>
-      </Container>
+      <Router history={history}>
+        <Switch>
+          <PrivateRoute exact path="/home" component={HomePage} />
+          <Route path="/login" component={LoginPage} />
+          <Route path="/register" component={RegisterPage} />
+          <Route path="/organization" component={OrganizationPage} />
+          <Route
+            path="/createorganization"
+            component={CreateOrganizationPage}
+          />
+          <Redirect from="*" to="/home" />
+        </Switch>
+      </Router>
     );
   }
 }
