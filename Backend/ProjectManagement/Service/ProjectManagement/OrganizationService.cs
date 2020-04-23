@@ -1,10 +1,13 @@
 ﻿using AutoMapper;
 using Common.Interface_Sort_Pag_Flt;
+using DAL;
 using Model.Common.ProjectManagement;
+using Repository;
 using Repository.Common.ProjectManagement;
 using Service.Common.ProjectManagement;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -15,11 +18,13 @@ namespace Service.ProjectManagement
 
         private IOrganizationRepositroy organizationRepository;
         private IMapper mapper;
+        private ProjectManagementContext ctx;
 
-        public OrganizationService(IOrganizationRepositroy organizationRepository, IMapper mapper)
+        public OrganizationService(IOrganizationRepositroy organizationRepository, IMapper mapper, ProjectManagementContext ctx)
         {
             this.organizationRepository = organizationRepository;
             this.mapper = mapper;
+            this.ctx = ctx;
         }
 
         public async Task<IOrganizationModel> CreateAsync(Guid userId, IOrganizationModel organization)

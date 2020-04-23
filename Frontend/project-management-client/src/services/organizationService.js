@@ -10,7 +10,7 @@ function getAll(userId) {
     method: "GET",
     headers: authHeader(),
   };
-  console.log("service user ", userId);
+
   return fetch(
     `https://localhost:44301/organization/getall/${userId}`,
     requestOptions

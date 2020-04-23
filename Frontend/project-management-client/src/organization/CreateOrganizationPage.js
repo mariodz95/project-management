@@ -8,6 +8,9 @@ import { createOrganization } from "../actions/organizationActions";
 import { Link } from "react-router-dom";
 import "../styles/Organization.css";
 import Container from "react-bootstrap/Container";
+import { history } from "../helpers/history";
+import { HomePage } from "../HomePage/HomePage";
+import { Router, Route, Switch, Redirect } from "react-router-dom";
 
 const schema = yup.object({
   name: yup
@@ -47,13 +50,13 @@ class CreateOrganizationPage extends React.Component {
               city: "",
               state: "",
               owner: "",
+              country: "",
               description: "",
             }}
             validationSchema={schema}
             onSubmit={(values, { setSubmitting, resetForm }) => {
               this.props.createOrganization(values, this.props.user.id);
               setSubmitting(false);
-              resetForm();
             }}
             validateOnBlur={false}
           >
@@ -110,6 +113,17 @@ class CreateOrganizationPage extends React.Component {
                   {touched.address && errors.address ? (
                     <div className="errorMesssage">{errors.address}</div>
                   ) : null}
+                </Form.Group>
+
+                <Form.Group controlId="formGridAddress1">
+                  <Form.Label>Country</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="Country"
+                    name="Country"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                  />
                 </Form.Group>
 
                 <Form.Row>

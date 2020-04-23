@@ -27,6 +27,8 @@ using Repository.ProjectManagement;
 using Repository.Common.ProjectManagement;
 using Service.ProjectManagement;
 using Service.Common.ProjectManagement;
+using Common.Interface_Sort_Pag_Flt;
+using Common.Sort_Pag_Flt;
 
 namespace ProjectManagement
 {
@@ -46,9 +48,11 @@ namespace ProjectManagement
             builder.RegisterType<OrganizationRepository>().As<IOrganizationRepositroy>();
             builder.RegisterType<OrganizationService>().As<IOrganizationService>();
 
+            builder.RegisterType<Sorting>().As<ISorting>();
+            builder.RegisterType<Paging>().As<IPaging>();
+            builder.RegisterType<Filtering>().As<IFiltering>();
+
             builder.RegisterGeneric(typeof(GenericRepository<>)).As(typeof(IGenericRepository<>));
-
-
             builder.RegisterType<UnitOfWork>().As<IUnitOfWork>();
 
 

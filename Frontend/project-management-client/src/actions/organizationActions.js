@@ -29,10 +29,9 @@ export const getAllOrganizations = (userId) => (dispatch) => {
 
 export const createOrganization = (organization, id) => (dispatch) => {
   dispatch(request());
-
   organizationService.createOrganization(organization, id).then(
-    (organizations) => {
-      dispatch(success(organizations));
+    (organization) => {
+      dispatch(success(organization));
       history.push("/home");
     },
     (error) => {
@@ -42,12 +41,12 @@ export const createOrganization = (organization, id) => (dispatch) => {
   );
 
   function request() {
-    return { type: organizationConstants.GETALL_REQUEST };
+    return { type: organizationConstants.CREATE_REQUEST };
   }
-  function success(organizations) {
-    return { type: organizationConstants.GETALL_SUCCESS, organizations };
+  function success(organization) {
+    return { type: organizationConstants.CREATE_SUCCESS, organization };
   }
   function failure(error) {
-    return { type: organizationConstants.GETALL_FAILURE, error };
+    return { type: organizationConstants.CREATE_FAILURE, error };
   }
 };

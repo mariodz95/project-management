@@ -38,8 +38,12 @@ class HomePage extends React.Component {
                 <tr>
                   <th>#</th>
                   <th>Name</th>
-                  <th>Date Created</th>
-                  <th>Username</th>
+                  <th>Email</th>
+                  <th>Country</th>
+                  <th>Address</th>
+                  <th>Description</th>
+                  <th>State</th>
+                  <th>Zip</th>
                 </tr>
               </thead>
               {this.props.organizations.map((item, index) => (
@@ -47,8 +51,12 @@ class HomePage extends React.Component {
                   <tr>
                     <td>1</td>
                     <td>{item.name}</td>
-                    <td>{item.name}</td>
-                    <td>{item.name}</td>
+                    <td>{item.email}</td>
+                    <td>{item.country}</td>
+                    <td>{item.address}</td>
+                    <td>{item.description}</td>
+                    <td>{item.state}</td>
+                    <td>{item.zip}</td>
                   </tr>
                 </tbody>
               ))}
