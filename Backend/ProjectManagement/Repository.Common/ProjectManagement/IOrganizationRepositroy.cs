@@ -6,11 +6,12 @@ using System.Threading.Tasks;
 
 namespace Repository.Common.ProjectManagement
 {
-    public interface IOrganizationRepositroy 
+    public interface IOrganizationRepositroy  
     {
         Task<IOrganizationModel> CreateAsync(Guid userId, IOrganizationModel organization);
-        Task<List<IOrganizationModel>> GetAllAsync();
+        Task<IEnumerable<IOrganizationModel>> GetAllAsync(IFiltering filterObj, ISorting sortObj, IPaging pagingObj);
         Task<bool> DeleteAsync(Guid id);
+
         //Task<IOrganizationModel> GetOrganizationByUserIdAsync(Guid userId);
     }
 }

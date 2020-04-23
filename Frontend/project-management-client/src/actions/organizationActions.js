@@ -1,12 +1,15 @@
 import { organizationConstants } from "../constants/organizationConstants";
 import { organizationService } from "../services/organizationService";
-import { displayError, displaySuccess } from "./alertActions";
+import { displayError } from "./alertActions";
+import { history } from "../helpers/history";
 
-export const getAllOrganizations = () => (dispatch) => {
+export const getAllOrganizations = (userId) => (dispatch) => {
   dispatch(request());
 
-  organizationService.getAll().then(
-    (organizations) => dispatch(success(organizations)),
+  organizationService.getAll(userId).then(
+    (organizations) => {
+      dispatch(success(organizations, userId));
+    },
     (error) => {
       dispatch(failure(error));
       dispatch(displayError(error));
@@ -28,7 +31,10 @@ export const createOrganization = (organization, id) => (dispatch) => {
   dispatch(request());
 
   organizationService.createOrganization(organization, id).then(
-    (organizations) => dispatch(success(organizations)),
+    (organizations) => {
+      dispatch(success(organizations));
+      history.push("/home");
+    },
     (error) => {
       dispatch(failure(error));
       dispatch(displayError(error));

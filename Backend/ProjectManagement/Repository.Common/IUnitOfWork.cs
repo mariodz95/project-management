@@ -11,6 +11,5 @@ namespace Repository.Common
         IGenericRepository<Organization> OrganizationRepository { get; }
         IGenericRepository<OrganizationRole> OrganizationRoleRepository { get; }
         Task<int> SaveAsync();
-        void Dispose(bool disposing);
     }
 }

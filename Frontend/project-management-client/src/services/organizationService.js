@@ -5,13 +5,14 @@ export const organizationService = {
   createOrganization,
 };
 
-function getAll() {
+function getAll(userId) {
   const requestOptions = {
     method: "GET",
     headers: authHeader(),
   };
+  console.log("service user ", userId);
   return fetch(
-    `https://localhost:44301/organization/getall`,
+    `https://localhost:44301/organization/getall/${userId}`,
     requestOptions
   ).then(handleResponse);
 }
@@ -28,7 +29,7 @@ function createOrganization(organization, id) {
     body: JSON.stringify(organization),
   };
   return fetch(
-    `https://localhost:44301/organization/${id}`,
+    `https://localhost:44301/organization/organization/${id}`,
     requestOptions
   ).then(handleResponse);
 }

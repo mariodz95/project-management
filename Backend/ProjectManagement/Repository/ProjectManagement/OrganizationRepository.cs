@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using Common.Helpers;
+using Common.Interface_Sort_Pag_Flt;
+using Common.Sort_Pag_Flt;
 using DAL.Entities;
 using Model.Common.ProjectManagement;
 using Repository.Common;
@@ -32,7 +34,15 @@ namespace Repository.ProjectManagement
                 throw new AppException("Organization name is required");
             }
 
-            var allOrganizations = await unitOfWork.OrganizationRepository.Get(null, null, null);
+
+            IPaging paging = new Paging
+            {
+                PageNumber = 0,
+                PageSize = 0,
+                TotalPages = 0,
+            };
+
+            var allOrganizations = await unitOfWork.OrganizationRepository.Get(paging, null, null, null, null, "");
             if (allOrganizations.Any(o => o.Name == organization.Name))
             {
                 throw new AppException("Organization name \"" + newOrganization.Name + "\" is already taken");
@@ -62,13 +72,13 @@ namespace Repository.ProjectManagement
 
             return mapper.Map<IOrganizationModel>(newOrganization);
         }
+       
 
-        public async Task<List<IOrganizationModel>> GetAllAsync()
+        public async Task<IEnumerable<IOrganizationModel>> GetAllAsync(IFiltering filterObj, ISorting sortObj, IPaging pagingObj)
         {
-            //var allUsers = await unitOfWork.UserRepository.Get(pagingObj, filter: w => w.FirstName == filterObj.FilterValue, sortObj, orderBy: q => q.OrderBy(d => d.FirstName),
-            //    orderByDescending: q => q.OrderByDescending(d => d.FirstName));
-            var allOrganizations = await unitOfWork.OrganizationRepository.GetAll();
-            return mapper.Map<List<IOrganizationModel>>(allOrganizations);
+            var allOrganizations = await unitOfWork.OrganizationRepository.Get(pagingObj, filter: w => w.UserId == Guid.Parse(filterObj.FilterValue), sortObj, orderBy: q => q.OrderByDescending(d => d.Name),
+                orderByDescending: q => q.OrderByDescending(d => d.Name));
+            return mapper.Map<IEnumerable<IOrganizationModel>>(allOrganizations);
         }
 
         public async Task<bool> DeleteAsync(Guid id)

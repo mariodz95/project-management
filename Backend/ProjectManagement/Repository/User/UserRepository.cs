@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Common.Helpers;
 using Common.Interface_Sort_Pag_Flt;
+using Common.Sort_Pag_Flt;
 using DAL;
 using DAL.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -114,7 +115,14 @@ namespace Repository.User
                 throw new AppException("Password is required");
             }
 
-            var allUsers = await unitOfWork.UserRepository.Get(null, null, null);
+            IPaging paging = new Paging
+            {
+                PageNumber = 0,
+                PageSize = 0,
+                TotalPages = 0,
+            };
+
+            var allUsers = await unitOfWork.UserRepository.Get(paging, null, null, null, null, "");
             if (allUsers.Any(x => x.Username == user.Username))
             {
                 throw new AppException("Username \"" + user.Username + "\" is already taken");

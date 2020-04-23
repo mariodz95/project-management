@@ -27,9 +27,9 @@ namespace Service.ProjectManagement
             return await organizationRepository.CreateAsync(userId, organization);
         }
 
-        public async Task<List<IOrganizationModel>> GetAll()
+        public async Task<IEnumerable<IOrganizationModel>> GetAllAsync(IFiltering filterObj, ISorting sortObj, IPaging pagingObj)
         {
-            var organizations = await organizationRepository.GetAllAsync();
+            var organizations = await organizationRepository.GetAllAsync(filterObj, sortObj, pagingObj);
             return organizations;
         }
 

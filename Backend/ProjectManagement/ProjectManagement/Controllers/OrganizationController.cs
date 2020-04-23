@@ -19,15 +19,17 @@ namespace ProjectManagement.Controllers
     {
         private IOrganizationService organizationService;
         private IMapper mapper;
+        private Repository.Common.IUnitOfWork unitOfWork;
 
-        public OrganizationController(IOrganizationService organizationService, IMapper mapper)
+        public OrganizationController(IOrganizationService organizationService, IMapper mapper, Repository.Common.IUnitOfWork unitOfWork)
         {
+            this.unitOfWork = unitOfWork;
             this.organizationService = organizationService;
             this.mapper = mapper;
         }
 
         [AllowAnonymous]
-        [HttpPost("{id}")]
+        [HttpPost("organization/{id}")]
         public async Task<IActionResult> CreateOrganization(Guid id, [FromBody]OrganizationViewModel newOrganization)
         {
             try
@@ -43,12 +45,12 @@ namespace ProjectManagement.Controllers
         }
 
         [AllowAnonymous]
-        [HttpGet("[action]")]
-        public async Task<IActionResult> GetAll(int pageSize, int totalPages, string sort = null, string search = null, int? pageNumber = null)
+        [HttpGet("getall/{userId}")]
+        public async Task<IActionResult> GetAll(int pageSize, int totalPages, string sort = null, string userId = null, int? pageNumber = null)
         {
             IFiltering filtering = new Filtering
             {
-                FilterValue = search
+                FilterValue = userId
             };
 
             ISorting sorting = new Sorting
@@ -63,9 +65,11 @@ namespace ProjectManagement.Controllers
                 TotalPages = totalPages
             };
 
-            var allOrganizations = await organizationService.GetAll();
+
+            var allOrganizations = await organizationService.GetAllAsync(filtering, sorting, paging);
             return Ok(allOrganizations);
         }
+
 
         //[AllowAnonymous]
         //[HttpGet("[action]")]

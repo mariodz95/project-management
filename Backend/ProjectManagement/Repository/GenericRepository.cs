@@ -24,16 +24,26 @@ namespace Repository
         public async Task<IEnumerable<TEntity>> Get(
            IPaging pagingObj,
            Expression<Func<TEntity, bool>> filter, ISorting sortObj,
-           Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null, 
+           Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderByDescending = null,
            string includeProperties = "")
         {
             IQueryable<TEntity> query = dbSet;
 
+            bool pagingEnabled = false;
+            if (pagingObj != null)
+            {
+                pagingEnabled = pagingObj.PageSize > 0;
+            }
+
             if (filter != null)
             {
                 query = query.Where(filter);
             }
+            if (pagingEnabled)
+                pagingObj.TotalPages = (int)Math.Ceiling((decimal)query.Count() / (decimal)pagingObj.PageSize);
+            else
+                pagingObj.TotalPages = 1;
 
             foreach (var includeProperty in includeProperties.Split
                 (new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
@@ -41,9 +51,21 @@ namespace Repository
                 query = query.Include(includeProperty);
             }
 
-            if (orderBy != null)
+            if (sortObj != null)
             {
-                return await orderBy(query).ToListAsync();
+                switch (sortObj.SortOrder)
+                {
+                    case "name_desc":
+                        query = orderByDescending(query);
+                        break;
+                    default:
+                        query = orderBy(query);
+                        break;
+                }
+            }
+            if (pagingEnabled)
+            {
+                return await query.Skip(pagingObj.PageSize * (pagingObj.PageNumber ?? -1)).Take(pagingObj.PageSize).ToListAsync();
             }
             else
             {

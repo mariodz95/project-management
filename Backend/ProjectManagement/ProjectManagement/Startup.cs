@@ -46,7 +46,12 @@ namespace ProjectManagement
             builder.RegisterType<OrganizationRepository>().As<IOrganizationRepositroy>();
             builder.RegisterType<OrganizationService>().As<IOrganizationService>();
 
+            builder.RegisterGeneric(typeof(GenericRepository<>)).As(typeof(IGenericRepository<>));
+
+
             builder.RegisterType<UnitOfWork>().As<IUnitOfWork>();
+
+
 
             var config = new MapperConfiguration(cfg =>
             {
@@ -65,6 +70,11 @@ namespace ProjectManagement
         {
             services.AddCors();
             services.AddControllers();
+
+            services.AddDbContext<ProjectManagementContext>(options => { 
+                options.UseSqlServer(
+                    Configuration.GetConnectionString("DefaultConnection"));
+                }, ServiceLifetime.Transient);
 
             // configure strongly typed settings objects
             var appSettingsSection = Configuration.GetSection("AppSettings");
@@ -106,9 +116,7 @@ namespace ProjectManagement
                 };
             });
 
-            services.AddDbContext<ProjectManagementContext>(options => 
-            options.UseSqlServer(
-                Configuration.GetConnectionString("DefaultConnection")));
+        
 
             services.AddIdentityServer()
                 .AddDeveloperSigningCredential()

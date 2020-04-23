@@ -5,14 +5,14 @@ import PropTypes from "prop-types";
 import { getAll, _delete, logout } from "../actions/userActions";
 import { getAllOrganizations } from "../actions/organizationActions";
 import { NavigationBar } from "../NavigationBar/NavigationBar";
+import Table from "react-bootstrap/Table";
 
 class HomePage extends React.Component {
   componentDidMount() {
     if (this.props.allOrganizations === undefined) {
-      this.props.getAllOrganizations();
+      this.props.getAllOrganizations(this.props.user.id);
     }
   }
-
   render() {
     const { user } = this.props;
     return (
@@ -33,7 +33,26 @@ class HomePage extends React.Component {
               Create Organization
             </Link>
           ) : (
-            this.props.organizations.map((item) => <p>{item.name}</p>)
+            <Table striped bordered hover>
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Name</th>
+                  <th>Date Created</th>
+                  <th>Username</th>
+                </tr>
+              </thead>
+              {this.props.organizations.map((item, index) => (
+                <tbody key={index}>
+                  <tr>
+                    <td>1</td>
+                    <td>{item.name}</td>
+                    <td>{item.name}</td>
+                    <td>{item.name}</td>
+                  </tr>
+                </tbody>
+              ))}
+            </Table>
           )
         ) : null}
       </React.Fragment>
@@ -44,8 +63,7 @@ class HomePage extends React.Component {
 HomePage.propTypes = {
   logout: PropTypes.func.isRequired,
   getAllOrganizations: PropTypes.func.isRequired,
-  allOrganizations: PropTypes.array.isRequired,
-  createOrganization: PropTypes.func.isRequired,
+  organizations: PropTypes.array.isRequired,
 };
 
 const mapStateToProps = (state) => ({

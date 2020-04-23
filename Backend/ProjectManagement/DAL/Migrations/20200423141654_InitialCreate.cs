@@ -16,7 +16,13 @@ namespace DAL.Migrations
                     DateUpdated = table.Column<DateTime>(nullable: false),
                     Name = table.Column<string>(nullable: true),
                     Abrv = table.Column<string>(nullable: true),
+                    Email = table.Column<string>(nullable: true),
+                    Address = table.Column<string>(nullable: true),
                     Description = table.Column<string>(nullable: true),
+                    City = table.Column<string>(nullable: true),
+                    State = table.Column<string>(nullable: true),
+                    Zip = table.Column<string>(nullable: true),
+                    Country = table.Column<string>(nullable: true),
                     UserId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>

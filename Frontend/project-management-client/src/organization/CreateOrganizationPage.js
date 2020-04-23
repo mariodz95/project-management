@@ -12,7 +12,7 @@ import Container from "react-bootstrap/Container";
 const schema = yup.object({
   name: yup
     .string()
-    .max(15, "Must be 15 characters or less")
+    .max(30, "Must be 15 characters or less")
     .required("Name is required field"),
   email: yup
     .string()
@@ -20,15 +20,15 @@ const schema = yup.object({
     .required("Company Email is required field"),
   address: yup
     .string()
-    .max(15, "Must be 15 characters or less")
+    .max(30, "Must be 15 characters or less")
     .required("Address is required field"),
   city: yup
     .string()
-    .max(15, "Must be 15 characters or less")
+    .max(30, "Must be 15 characters or less")
     .required("State is required field"),
   state: yup
     .string()
-    .max(15, "Must be 15 characters or less")
+    .max(30, "Must be 15 characters or less")
     .required("City is required field"),
   zip: yup.number().required("Zip is required field"),
 });
