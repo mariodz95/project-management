@@ -9,6 +9,6 @@ namespace Service.Common.ProjectManagement
     public interface IOrganizationService
     {
         Task<IOrganizationModel> CreateAsync(Guid userId, IOrganizationModel organization);
-        Task<IEnumerable<IOrganizationModel>> GetAllAsync(Guid userId);
+        Task<IEnumerable<IOrganizationModel>> GetAllAsync(Guid userId, int pageSize, int totalPages, int? pageNumber);
     }
 }

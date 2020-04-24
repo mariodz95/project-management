@@ -5,7 +5,8 @@ import PropTypes from "prop-types";
 import { getAll, _delete, logout } from "../actions/userActions";
 import { getAllOrganizations } from "../actions/organizationActions";
 import { NavigationBar } from "../NavigationBar/NavigationBar";
-import Table from "react-bootstrap/Table";
+import { Table, Pagination } from "react-bootstrap";
+import "../styles/HomePage.css";
 
 class HomePage extends React.Component {
   componentDidMount() {
@@ -15,54 +16,72 @@ class HomePage extends React.Component {
   }
   render() {
     const { user } = this.props;
+    let counter = 1;
     return (
       <React.Fragment>
         <NavigationBar />
         <Link to="/createorganization" className="btn btn-link">
           Create Organization
         </Link>
-        <div className="col-md-6 col-md-offset-3">
-          <p>
-            <Link to="/login">Logout</Link>
-            {user.username}
-          </p>
-        </div>
-        {this.props.organizations !== undefined ? (
-          this.props.organizations.lenght === 0 ? (
-            <Link to="/organization" className="btn btn-link">
-              Create Organization
-            </Link>
-          ) : (
-            <Table striped bordered hover>
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>Name</th>
-                  <th>Email</th>
-                  <th>Country</th>
-                  <th>Address</th>
-                  <th>Description</th>
-                  <th>State</th>
-                  <th>Zip</th>
-                </tr>
-              </thead>
-              {this.props.organizations.map((item, index) => (
-                <tbody key={index}>
+        <p>
+          <Link to="/login">Logout</Link>
+          {user.username}
+        </p>
+        <div>
+          {this.props.organizations.length !== 0 ? (
+            <React.Fragment>
+              <Table striped bordered hover>
+                <thead>
                   <tr>
-                    <td>1</td>
-                    <td>{item.name}</td>
-                    <td>{item.email}</td>
-                    <td>{item.country}</td>
-                    <td>{item.address}</td>
-                    <td>{item.description}</td>
-                    <td>{item.state}</td>
-                    <td>{item.zip}</td>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Country</th>
+                    <th>Address</th>
+                    <th>Description</th>
+                    <th>State</th>
+                    <th>Zip</th>
                   </tr>
-                </tbody>
-              ))}
-            </Table>
-          )
-        ) : null}
+                </thead>
+                {this.props.organizations.map((item, index) => (
+                  <tbody key={index}>
+                    <tr>
+                      <td>{counter++}</td>
+                      <td>{item.name}</td>
+                      <td>{item.email}</td>
+                      <td>{item.country}</td>
+                      <td>{item.address}</td>
+                      <td>{item.description}</td>
+                      <td>{item.state}</td>
+                      <td>{item.zip}</td>
+                    </tr>
+                  </tbody>
+                ))}
+              </Table>
+              <div className="pagination">
+                <Pagination>
+                  <Pagination.First />
+                  <Pagination.Prev />
+                  <Pagination.Item>{1}</Pagination.Item>
+                  <Pagination.Ellipsis />
+
+                  <Pagination.Item>{10}</Pagination.Item>
+                  <Pagination.Item>{11}</Pagination.Item>
+                  <Pagination.Item active>{12}</Pagination.Item>
+                  <Pagination.Item>{13}</Pagination.Item>
+                  <Pagination.Item disabled>{14}</Pagination.Item>
+
+                  <Pagination.Ellipsis />
+                  <Pagination.Item>{20}</Pagination.Item>
+                  <Pagination.Next />
+                  <Pagination.Last />
+                </Pagination>
+              </div>
+            </React.Fragment>
+          ) : (
+            <div className="message"> "No organizations for display!"</div>
+          )}
+        </div>
       </React.Fragment>
     );
   }

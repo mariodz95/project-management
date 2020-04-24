@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Common.Helpers;
 using Common.Interface_Sort_Pag_Flt;
+using Common.Sort_Pag_Flt;
 using DAL.Entities;
 using Model.Common.ProjectManagement;
 using Repository.Common.ProjectManagement;
@@ -60,9 +61,15 @@ namespace Service.ProjectManagement
             return mapper.Map<IOrganizationModel>(newOrganization);
         }
 
-        public async Task<IEnumerable<IOrganizationModel>> GetAllAsync(Guid userId)
+        public async Task<IEnumerable<IOrganizationModel>> GetAllAsync(Guid userId, int pageSize, int totalPages, int? pageNumber)
         {
-            var organizations = await organizationRepository.GetAllAsync(userId);
+            IPaging paging = new Paging
+            {
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                TotalPages = totalPages
+            };
+            var organizations = await organizationRepository.GetAllAsync(userId, paging);
             return mapper.Map<IEnumerable<IOrganizationModel>>(organizations);
         }
     }

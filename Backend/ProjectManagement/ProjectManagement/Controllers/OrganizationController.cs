@@ -6,6 +6,8 @@ using Model.Common.ProjectManagement;
 using ProjectManagement.Models.ProjectManagement;
 using Service.Common.ProjectManagement;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ProjectManagement.Controllers
@@ -42,10 +44,10 @@ namespace ProjectManagement.Controllers
 
         [AllowAnonymous]
         [HttpGet("getall/{userId}")]
-        public async Task<IActionResult> GetAll(Guid userId)
+        public async Task<IActionResult> GetAll(Guid userId, int pageSize = 10, int totalPages = 1, int? pageNumber = 1)
         {
-            var allOrganizations = await organizationService.GetAllAsync(userId);
-            return Ok(allOrganizations);
+            var allOrganizations = await organizationService.GetAllAsync(userId, pageSize, totalPages, pageNumber);
+            return Ok(mapper.Map<IEnumerable<OrganizationViewModel>>(allOrganizations));
         }
     }
 }

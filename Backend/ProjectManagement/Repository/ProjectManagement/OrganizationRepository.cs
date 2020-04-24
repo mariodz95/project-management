@@ -25,7 +25,7 @@ namespace Repository.ProjectManagement
             return exist;
         }
 
-        public async Task<int> CreateAsync(Organization organization)
+        public async Task<int> CreateAsync(Organization organization, IPaging paging)
         {       
             await context.Organization.AddAsync(organization);
             var result = await context.SaveChangesAsync();

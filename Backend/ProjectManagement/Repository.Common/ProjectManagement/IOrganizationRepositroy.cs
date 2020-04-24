@@ -8,7 +8,7 @@ namespace Repository.Common.ProjectManagement
     public interface IOrganizationRepositroy  
     {
         Task<int> CreateAsync(Organization organization);
-        Task<IEnumerable<Organization>> GetAllAsync(Guid userId);
+        Task<IEnumerable<Organization>> GetAllAsync(Guid userId, IPaging paging);
         Task<bool> CheckIfExistAsync(string name);
     }
 }

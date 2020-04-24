@@ -8,9 +8,6 @@ import { createOrganization } from "../actions/organizationActions";
 import { Link } from "react-router-dom";
 import "../styles/Organization.css";
 import Container from "react-bootstrap/Container";
-import { history } from "../helpers/history";
-import { HomePage } from "../HomePage/HomePage";
-import { Router, Route, Switch, Redirect } from "react-router-dom";
 
 const schema = yup.object({
   name: yup

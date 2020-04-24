@@ -9,5 +9,6 @@ namespace Model
         public Guid Id { get; set; }
         public DateTime DateCreated { get; set; }
         public DateTime DateUpdated { get; set; }
+        public string Abrv { get; set; }
     }
 }
