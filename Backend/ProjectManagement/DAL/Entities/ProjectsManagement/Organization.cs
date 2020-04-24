@@ -14,6 +14,7 @@ namespace DAL.Entities
         public string State { get; set; }
         public string Zip { get; set; }
         public string Country { get; set; }
+        public OrganizationRole OrganizationRole { get; set; }
         public IEnumerable<User> User { get; set; }
         public IEnumerable<Project> Project { get; set; }
         public Guid UserId { get; set; }

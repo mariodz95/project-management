@@ -1,14 +1,12 @@
 ﻿using AutoMapper;
+using Common.Helpers;
 using Common.Interface_Sort_Pag_Flt;
-using DAL;
+using DAL.Entities;
 using Model.Common.ProjectManagement;
-using Repository;
 using Repository.Common.ProjectManagement;
 using Service.Common.ProjectManagement;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Service.ProjectManagement
@@ -18,31 +16,54 @@ namespace Service.ProjectManagement
 
         private IOrganizationRepositroy organizationRepository;
         private IMapper mapper;
-        private ProjectManagementContext ctx;
 
-        public OrganizationService(IOrganizationRepositroy organizationRepository, IMapper mapper, ProjectManagementContext ctx)
+        public OrganizationService(IOrganizationRepositroy organizationRepository, IMapper mapper)
         {
             this.organizationRepository = organizationRepository;
             this.mapper = mapper;
-            this.ctx = ctx;
         }
 
         public async Task<IOrganizationModel> CreateAsync(Guid userId, IOrganizationModel organization)
         {
-            return await organizationRepository.CreateAsync(userId, organization);
+            var newOrganization = mapper.Map<Organization>(organization);
+
+            if (string.IsNullOrWhiteSpace(newOrganization.Name))
+            {
+                throw new AppException("Organization name is required");
+            }
+
+            if (await organizationRepository.CheckIfExistAsync(newOrganization.Name))
+            {
+                throw new AppException("Organization name \"" + newOrganization.Name + "\" is already taken");
+            }
+
+            newOrganization.Id = Guid.NewGuid();
+            newOrganization.Abrv = organization.Name.ToLower();
+            newOrganization.DateCreated = DateTime.Now;
+            newOrganization.DateUpdated = DateTime.Now;
+            newOrganization.UserId = userId;
+
+
+            var organizationRole = new OrganizationRole
+            {
+                Id = Guid.NewGuid(),
+                DateUpdated = DateTime.Now,
+                DateCreated = DateTime.Now,
+                Name = Role.User,
+                Abrv = Role.User,
+                UserId = userId,
+                OrganizationId = newOrganization.Id,
+            };
+
+            newOrganization.OrganizationRole = organizationRole;
+            await organizationRepository.CreateAsync(newOrganization);
+            return mapper.Map<IOrganizationModel>(newOrganization);
         }
 
-        public async Task<IEnumerable<IOrganizationModel>> GetAllAsync(IFiltering filterObj, ISorting sortObj, IPaging pagingObj)
+        public async Task<IEnumerable<IOrganizationModel>> GetAllAsync(Guid userId)
         {
-            var organizations = await organizationRepository.GetAllAsync(filterObj, sortObj, pagingObj);
-            return organizations;
+            var organizations = await organizationRepository.GetAllAsync(userId);
+            return mapper.Map<IEnumerable<IOrganizationModel>>(organizations);
         }
-
-        //public async Task<IOrganizationModel> GetOrganizationByUserIdAsync(Guid userId)
-        //{
-        //    var organization = await organizationRepository.GetOrganizationByUserIdAsync(userId);
-        //    return organization;
-        //}
-
     }
 }

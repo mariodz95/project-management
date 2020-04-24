@@ -15,8 +15,6 @@ namespace Service.Common
         Task<List<IUserModel>> GetAll(IFiltering filterObj, ISorting sortObj, IPaging pagingObj);
         Task<IUserModel> GetByIdAsync(Guid id);
         Task<IUserModel> CreateAsync(IUserModel model, string userPassword);
-        Task<bool> UpdateAsync(Guid id, IUserModel user, string password = null);
-        Task<bool> DeleteAsync(Guid id);
         string GetToken(IUserModel user);
 
     }

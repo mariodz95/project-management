@@ -1,12 +1,11 @@
 ﻿using AutoMapper;
+using Common.Helpers;
 using Common.Interface_Sort_Pag_Flt;
 using DAL.Entities;
 using Helpers;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using Model;
 using Model.Common;
-using Model.Common.ProjectManagement;
 using Repository.Common;
 using Service.Common;
 using System;
@@ -50,7 +49,7 @@ namespace Service
                 return null;
             }
 
-            return user;
+            return mapper.Map<IUserModel>(user);
         }
 
         public string GetToken(IUserModel user)
@@ -76,29 +75,54 @@ namespace Service
 
         public async Task<List<IUserModel>> GetAll(IFiltering filterObj, ISorting sortObj, IPaging pagingObj)
         {
-            var users = await userRepository.GetAllAsync(filterObj, sortObj, pagingObj);
+            var users = await userRepository.GetAllAsync();
             return mapper.Map<List<IUserModel>>(users);
         }
 
         public async Task<IUserModel> GetByIdAsync(Guid id)
         {
-            return await userRepository.GetByIdAsync(id);
+            var user = await userRepository.GetByIdAsync(id);
+            return mapper.Map<IUserModel>(user);
         }
 
         public async Task<IUserModel> CreateAsync(IUserModel model, string userPassword)
         {
-            return await userRepository.CreateAsync(model, userPassword);
-        }
+            DAL.Entities.User newUser = mapper.Map<DAL.Entities.User>(model);
 
-        public async Task<bool> UpdateAsync(Guid id, IUserModel user, string password = null)
-        {
-            user.Id = id;
-            return await userRepository.UpdateAsync(user, password);
-        }
+            if (string.IsNullOrWhiteSpace(userPassword))
+            {
+                throw new AppException("Password is required");
+            }
 
-        public async Task<bool> DeleteAsync(Guid id)
-        {
-            return await userRepository.DeleteAsync(id);
+
+            if (await userRepository.CheckIfExistAsync(model.Username))
+            {
+                throw new AppException("Username \"" + model.Username + "\" is already taken");
+            }
+
+            byte[] passwordHash, passwordSalt;
+            CreatePasswordHash(userPassword, out passwordHash, out passwordSalt);
+
+            newUser.Id = Guid.NewGuid();
+            newUser.DateCreated = DateTime.Now;
+            newUser.DateUpdated = DateTime.Now;
+            newUser.PasswordHash = passwordHash;
+            newUser.PasswordSalt = passwordSalt;
+
+            var userRole = new UserRole
+            {
+                Id = Guid.NewGuid(),
+                DateUpdated = DateTime.Now,
+                DateCreated = DateTime.Now,
+                Name = Role.User,
+                Abrv = Role.User,
+                UserId = newUser.Id,
+            };
+
+            newUser.UserRole = userRole;
+            await userRepository.CreateAsync(newUser);
+           
+            return mapper.Map<IUserModel>(newUser);
         }
 
 
@@ -119,6 +143,18 @@ namespace Service
             }
 
             return true;
+        }
+
+        private static void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
+        {
+            if (password == null) throw new ArgumentNullException("password");
+            if (string.IsNullOrWhiteSpace(password)) throw new ArgumentException("Value cannot be empty or whitespace only string.", "password");
+
+            using (var hmac = new System.Security.Cryptography.HMACSHA512())
+            {
+                passwordSalt = hmac.Key;
+                passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
+            }
         }
     }
 }

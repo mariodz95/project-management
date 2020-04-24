@@ -102,29 +102,5 @@ namespace WebApi.Controllers
             var user = await userService.GetByIdAsync(id);
             return Ok(user);
         }
-
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateAsync(Guid id, [FromBody]UpdateViewModel model)
-        {
-            try
-            {
-                var updateUser = mapper.Map<IUserModel>(model);
-                await userService.UpdateAsync(id, updateUser, model.Password);
-                return Ok();
-            }
-            catch (AppException ex)
-            {
-                return BadRequest(new { message = ex.Message });
-            }
-        }
-
-        [Authorize(Roles = Role.Admin)]
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteAsync(Guid id)
-        {
-            var deleted = await userService.DeleteAsync(id);
-            return Ok(deleted);
-        }
-
     }
 }

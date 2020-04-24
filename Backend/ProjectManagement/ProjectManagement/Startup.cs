@@ -18,7 +18,6 @@ using Microsoft.OpenApi.Models;
 using System.Threading.Tasks;
 using Common.Helpers;
 using System.Collections.Generic;
-using Repository.User;
 using Repository.Common;
 using System;
 using ProjectManagement.Models;
@@ -51,11 +50,6 @@ namespace ProjectManagement
             builder.RegisterType<Sorting>().As<ISorting>();
             builder.RegisterType<Paging>().As<IPaging>();
             builder.RegisterType<Filtering>().As<IFiltering>();
-
-            builder.RegisterGeneric(typeof(GenericRepository<>)).As(typeof(IGenericRepository<>));
-            builder.RegisterType<UnitOfWork>().As<IUnitOfWork>();
-
-
 
             var config = new MapperConfiguration(cfg =>
             {

@@ -1,7 +1,5 @@
 ﻿using AutoMapper;
 using Common.Helpers;
-using Common.Interface_Sort_Pag_Flt;
-using Common.Sort_Pag_Flt;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Model.Common.ProjectManagement;
@@ -19,11 +17,9 @@ namespace ProjectManagement.Controllers
     {
         private IOrganizationService organizationService;
         private IMapper mapper;
-        private Repository.Common.IUnitOfWork unitOfWork;
 
-        public OrganizationController(IOrganizationService organizationService, IMapper mapper, Repository.Common.IUnitOfWork unitOfWork)
+        public OrganizationController(IOrganizationService organizationService, IMapper mapper)
         {
-            this.unitOfWork = unitOfWork;
             this.organizationService = organizationService;
             this.mapper = mapper;
         }
@@ -46,45 +42,10 @@ namespace ProjectManagement.Controllers
 
         [AllowAnonymous]
         [HttpGet("getall/{userId}")]
-        public async Task<IActionResult> GetAll(int pageSize, int totalPages, string sort = null, string userId = null, int? pageNumber = null)
+        public async Task<IActionResult> GetAll(Guid userId)
         {
-            IFiltering filtering = new Filtering
-            {
-                FilterValue = userId
-            };
-
-            ISorting sorting = new Sorting
-            {
-                SortOrder = sort
-            };
-
-            IPaging paging = new Paging
-            {
-                PageNumber = pageNumber,
-                PageSize = pageSize,
-                TotalPages = totalPages
-            };
-
-
-            var allOrganizations = await organizationService.GetAllAsync(filtering, sorting, paging);
+            var allOrganizations = await organizationService.GetAllAsync(userId);
             return Ok(allOrganizations);
         }
-
-
-        //[AllowAnonymous]
-        //[HttpGet("[action]")]
-        //public async Task<IActionResult> GetOrganizationByZserId(Guid userId)
-        //{
-        //    try
-        //    {
-        //        var organization = await organizationService.GetOrganizationByUserIdAsync(userId);
-        //        return Ok(organization);
-        //    }
-        //    catch (AppException ex)
-        //    {
-        //        return BadRequest(new { message = ex.Message });
-        //    }
-
-        //}
     }
 }
