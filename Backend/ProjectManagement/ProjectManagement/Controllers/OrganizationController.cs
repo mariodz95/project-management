@@ -1,13 +1,17 @@
 ﻿using AutoMapper;
 using Common.Helpers;
+using Common.Interface_Sort_Pag_Flt;
+using Common.Sort_Pag_Flt;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Model.Common.ProjectManagement;
+using ProjectManagement.Models;
 using ProjectManagement.Models.ProjectManagement;
 using Service.Common.ProjectManagement;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace ProjectManagement.Controllers
@@ -43,11 +47,19 @@ namespace ProjectManagement.Controllers
         }
 
         [AllowAnonymous]
-        [HttpGet("getall/{userId}")]
-        public async Task<IActionResult> GetAll(Guid userId, int pageSize = 10, int totalPages = 1, int? pageNumber = 1)
+        [HttpGet("getall/{userId}&{pageNumber}&{pageSize}")]
+        public async Task<IActionResult> GetAll(Guid userId, int pageNumber = 0, int pageSize = 10) 
         {
-            var allOrganizations = await organizationService.GetAllAsync(userId, pageSize, totalPages, pageNumber);
-            return Ok(mapper.Map<IEnumerable<OrganizationViewModel>>(allOrganizations));
+            IPaging paging = new Paging
+            {
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                TotalPages = 0
+            };
+
+            var allOrganizations = await organizationService.GetAllAsync(userId, paging);
+
+            return Ok(new { organizations = mapper.Map<IEnumerable<OrganizationViewModel>>(allOrganizations), totalPages = paging.TotalPages });
         }
     }
 }

@@ -72,7 +72,7 @@ namespace WebApi.Controllers
 
         [Authorize(Roles = Role.Admin)]
         [HttpGet]
-        public async Task<IActionResult> GetAll(int pageSize, int totalPages, string sort = null, string search = null, int? pageNumber = null)
+        public async Task<IActionResult> GetAll(int pageSize, int totalPages, int pageNumber, string sort = null,  string search = null)
         {
             IFiltering filtering = new Filtering
             {

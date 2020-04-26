@@ -65,7 +65,7 @@ namespace Repository
             }
             if (pagingEnabled)
             {
-                return await query.Skip(pagingObj.PageSize * (pagingObj.PageNumber ?? -1)).Take(pagingObj.PageSize).ToListAsync();
+                return await query.Skip(pagingObj.PageSize * (pagingObj.PageNumber -1)).Take(pagingObj.PageSize).ToListAsync();
             }
             else
             {

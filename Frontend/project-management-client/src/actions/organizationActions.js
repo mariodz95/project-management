@@ -3,12 +3,14 @@ import { organizationService } from "../services/organizationService";
 import { displayError } from "./alertActions";
 import { history } from "../helpers/history";
 
-export const getAllOrganizations = (userId) => (dispatch) => {
+export const getAllOrganizations = (userId, pageCount, pageSize) => (
+  dispatch
+) => {
   dispatch(request());
-
-  organizationService.getAll(userId).then(
-    (organizations) => {
-      dispatch(success(organizations, userId));
+  organizationService.getAll(userId, pageCount, pageSize).then(
+    (data) => {
+      dispatch(success(data.organizations, userId));
+      dispatch(getPageCount(data.totalPages));
     },
     (error) => {
       dispatch(failure(error));
@@ -24,6 +26,9 @@ export const getAllOrganizations = (userId) => (dispatch) => {
   }
   function failure(error) {
     return { type: organizationConstants.GETALL_FAILURE, error };
+  }
+  function getPageCount(pageCount) {
+    return { type: organizationConstants.GET_PAGE_COUNT, pageCount };
   }
 };
 

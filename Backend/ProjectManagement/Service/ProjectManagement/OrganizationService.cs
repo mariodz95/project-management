@@ -61,14 +61,9 @@ namespace Service.ProjectManagement
             return mapper.Map<IOrganizationModel>(newOrganization);
         }
 
-        public async Task<IEnumerable<IOrganizationModel>> GetAllAsync(Guid userId, int pageSize, int totalPages, int? pageNumber)
+        public async Task<IEnumerable<IOrganizationModel>> GetAllAsync(Guid userId, IPaging paging)
         {
-            IPaging paging = new Paging
-            {
-                PageNumber = pageNumber,
-                PageSize = pageSize,
-                TotalPages = totalPages
-            };
+
             var organizations = await organizationRepository.GetAllAsync(userId, paging);
             return mapper.Map<IEnumerable<IOrganizationModel>>(organizations);
         }

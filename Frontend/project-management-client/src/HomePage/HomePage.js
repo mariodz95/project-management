@@ -5,29 +5,58 @@ import PropTypes from "prop-types";
 import { getAll, _delete, logout } from "../actions/userActions";
 import { getAllOrganizations } from "../actions/organizationActions";
 import { NavigationBar } from "../NavigationBar/NavigationBar";
-import { Table, Pagination } from "react-bootstrap";
+import { Table, Row, Col, Container } from "react-bootstrap";
 import "../styles/HomePage.css";
+import ReactPaginate from "react-paginate";
 
 class HomePage extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      data: [],
+      pages: 0,
+    };
+  }
   componentDidMount() {
     if (this.props.allOrganizations === undefined) {
-      this.props.getAllOrganizations(this.props.user.id);
+      this.props.getAllOrganizations(
+        this.props.user.id,
+        this.props.pageCount,
+        this.props.pageSize
+      );
     }
   }
+
+  handlePageClick = (data) => {
+    let selected = data.selected + 1;
+    this.props.getAllOrganizations(
+      this.props.user.id,
+      selected,
+      this.props.pageSize
+    );
+  };
   render() {
     const { user } = this.props;
-    let counter = 1;
     return (
       <React.Fragment>
         <NavigationBar />
-        <Link to="/createorganization" className="btn btn-link">
-          Create Organization
-        </Link>
-        <p>
-          <Link to="/login">Logout</Link>
-          {user.username}
-        </p>
-        <div>
+        <Row>
+          <Col>
+            <Link to="/createorganization" className="btn btn-link">
+              Create Organization
+            </Link>
+          </Col>
+          <Col>
+            <p>
+              <Link to="/login" className="push">
+                Logout
+              </Link>
+              {user.username}
+            </p>
+          </Col>
+        </Row>{" "}
+        <div className="table">
           {this.props.organizations.length !== 0 ? (
             <React.Fragment>
               <Table striped bordered hover>
@@ -46,7 +75,7 @@ class HomePage extends React.Component {
                 {this.props.organizations.map((item, index) => (
                   <tbody key={index}>
                     <tr>
-                      <td>{counter++}</td>
+                      <td></td>
                       <td>{item.name}</td>
                       <td>{item.email}</td>
                       <td>{item.country}</td>
@@ -59,23 +88,19 @@ class HomePage extends React.Component {
                 ))}
               </Table>
               <div className="pagination">
-                <Pagination>
-                  <Pagination.First />
-                  <Pagination.Prev />
-                  <Pagination.Item>{1}</Pagination.Item>
-                  <Pagination.Ellipsis />
-
-                  <Pagination.Item>{10}</Pagination.Item>
-                  <Pagination.Item>{11}</Pagination.Item>
-                  <Pagination.Item active>{12}</Pagination.Item>
-                  <Pagination.Item>{13}</Pagination.Item>
-                  <Pagination.Item disabled>{14}</Pagination.Item>
-
-                  <Pagination.Ellipsis />
-                  <Pagination.Item>{20}</Pagination.Item>
-                  <Pagination.Next />
-                  <Pagination.Last />
-                </Pagination>
+                <ReactPaginate
+                  previousLabel={"previous"}
+                  nextLabel={"next"}
+                  breakLabel={"..."}
+                  breakClassName={"break-me"}
+                  pageCount={this.props.pageCount}
+                  marginPagesDisplayed={2}
+                  pageRangeDisplayed={5}
+                  onPageChange={this.handlePageClick}
+                  containerClassName={"pagination"}
+                  subContainerClassName={"pages pagination"}
+                  activeClassName={"active"}
+                />
               </div>
             </React.Fragment>
           ) : (
@@ -97,6 +122,8 @@ const mapStateToProps = (state) => ({
   user: state.authentication.user,
   users: state.authentication.users,
   organizations: state.organizations.allOrganizations,
+  pageCount: state.organizations.pageCount,
+  pageSize: state.organizations.pageSize,
 });
 
 const connectedHomePage = connect(mapStateToProps, {

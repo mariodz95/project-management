@@ -15,6 +15,7 @@ namespace Model.Common.ProjectManagement
         public string State { get; set; }
         public string Zip { get; set; }
         public string Country { get; set; }
+        public int TotalPages { get; set; }
         public IOrganizationRoleModel OrganizationRole { get; set; }
         public IEnumerable<IUserModel> User { get; set; }
         public Guid UserId { get; set; }

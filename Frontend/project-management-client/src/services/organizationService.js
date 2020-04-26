@@ -5,14 +5,14 @@ export const organizationService = {
   createOrganization,
 };
 
-function getAll(userId) {
+function getAll(userId, pageNumber, pageSize) {
   const requestOptions = {
     method: "GET",
     headers: authHeader(),
   };
 
   return fetch(
-    `https://localhost:44301/organization/getall/${userId}`,
+    `https://localhost:44301/organization/getall/${userId}&${pageNumber}&${pageSize}`,
     requestOptions
   ).then(handleResponse);
 }
@@ -37,6 +37,7 @@ function createOrganization(organization, id) {
 function handleResponse(response) {
   return response.text().then((text) => {
     const data = text && JSON.parse(text);
+
     if (!response.ok) {
       if (response.status === 401) {
         //auto logout if 401 response returned from api

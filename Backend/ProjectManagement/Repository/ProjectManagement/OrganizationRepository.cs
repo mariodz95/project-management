@@ -1,4 +1,5 @@
-﻿using DAL;
+﻿using Common.Interface_Sort_Pag_Flt;
+using DAL;
 using DAL.Entities;
 using Microsoft.EntityFrameworkCore;
 using Repository.Common.ProjectManagement;
@@ -25,16 +26,35 @@ namespace Repository.ProjectManagement
             return exist;
         }
 
-        public async Task<int> CreateAsync(Organization organization, IPaging paging)
-        {       
+        public async Task<int> CreateAsync(Organization organization)
+        {
             await context.Organization.AddAsync(organization);
             var result = await context.SaveChangesAsync();
             return result;  
         }
 
-        public async Task<IEnumerable<Organization>> GetAllAsync(Guid userId)
+        public async Task<IEnumerable<Organization>> GetAllAsync(Guid userId, IPaging paging)
         {
-            return await context.Organization.Where(o => o.UserId == userId).ToListAsync();
+            bool pagingEnabled = paging.PageSize > 0;
+            var query = context.Organization;
+
+            if (pagingEnabled)
+            {
+                paging.TotalPages = (int)Math.Ceiling((decimal)query.Count() / (decimal)paging.PageSize);
+            }
+            else
+            {
+                paging.TotalPages = 1;
+            }
+
+            if (pagingEnabled)
+            {
+                return await query.Skip((paging.PageNumber - 1) * paging.PageSize).Take(paging.PageSize).ToListAsync();
+            }
+            else
+            {
+                return await query.Where(o => o.UserId == userId).ToListAsync();
+            }
         }
     }
 }
