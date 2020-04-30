@@ -47,6 +47,9 @@ namespace ProjectManagement
             builder.RegisterType<OrganizationRepository>().As<IOrganizationRepositroy>();
             builder.RegisterType<OrganizationService>().As<IOrganizationService>();
 
+            builder.RegisterType<ProjectRepository>().As<IProjectRepository>();
+            builder.RegisterType<ProjectService>().As<IProjectService>();
+
             builder.RegisterType<Sorting>().As<ISorting>();
             builder.RegisterType<Paging>().As<IPaging>();
             builder.RegisterType<Filtering>().As<IFiltering>();

@@ -8,8 +8,10 @@ import { PrivateRoute } from "../components/privateRoute";
 import { LoginPage } from "../LoginPage/LoginPage";
 import { HomePage } from "../HomePage/HomePage";
 import { RegisterPage } from "../RegisterPage/RegisterPage";
-import { OrganizationPage } from "../organization/OrganizationPage";
-import { CreateOrganizationPage } from "../organization/CreateOrganizationPage";
+import { OrganizationPage } from "../OrganizationPage/OrganizationPage";
+import { CreateOrganizationPage } from "../OrganizationPage/CreateOrganizationPage";
+import { ProjectPage } from "../ProjectPage/ProjectPage";
+import { CreateProjectPage } from "../ProjectPage/CreateProjectPage";
 
 import "../styles/App.css";
 
@@ -31,6 +33,8 @@ class App extends React.Component {
           <Route path="/login" component={LoginPage} />
           <Route path="/register" component={RegisterPage} />
           <Route path="/organization" component={OrganizationPage} />
+          <Route path="/projects" component={ProjectPage} />
+          <Route path="/createproject" component={CreateProjectPage} />
           <Route
             path="/createorganization"
             component={CreateOrganizationPage}

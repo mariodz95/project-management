@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 import { getAll, _delete, logout } from "../actions/userActions";
 import { getAllOrganizations } from "../actions/organizationActions";
 import { NavigationBar } from "../NavigationBar/NavigationBar";
-import { Table, Row, Col, Container } from "react-bootstrap";
+import { Table, Row, Col } from "react-bootstrap";
 import "../styles/HomePage.css";
 import ReactPaginate from "react-paginate";
 

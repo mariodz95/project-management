@@ -45,6 +45,12 @@ namespace DAL.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_OrganizationRole", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_OrganizationRole_Organization_OrganizationId",
+                        column: x => x.OrganizationId,
+                        principalTable: "Organization",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -57,6 +63,7 @@ namespace DAL.Migrations
                     Name = table.Column<string>(nullable: true),
                     Abrv = table.Column<string>(nullable: true),
                     Description = table.Column<string>(nullable: true),
+                    OwnerId = table.Column<Guid>(nullable: false),
                     OrganizationId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
@@ -259,6 +266,12 @@ namespace DAL.Migrations
                 name: "IX_Comment_TaskId",
                 table: "Comment",
                 column: "TaskId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OrganizationRole_OrganizationId",
+                table: "OrganizationRole",
+                column: "OrganizationId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Project_OrganizationId",

@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAL.Migrations
 {
     [DbContext(typeof(ProjectManagementContext))]
-    [Migration("20200423141654_InitialCreate")]
+    [Migration("20200430095307_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -125,6 +125,9 @@ namespace DAL.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("OrganizationId")
+                        .IsUnique();
+
                     b.ToTable("OrganizationRole");
                 });
 
@@ -150,6 +153,9 @@ namespace DAL.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("OrganizationId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("OwnerId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
@@ -357,6 +363,15 @@ namespace DAL.Migrations
                     b.HasOne("DAL.Entities.Task", "Task")
                         .WithMany("Comment")
                         .HasForeignKey("TaskId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("DAL.Entities.OrganizationRole", b =>
+                {
+                    b.HasOne("DAL.Entities.Organization", null)
+                        .WithOne("OrganizationRole")
+                        .HasForeignKey("DAL.Entities.OrganizationRole", "OrganizationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

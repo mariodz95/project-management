@@ -10,3 +10,7 @@
 .table {
   text-align: center;
 }
+
+td {
+  word-break: break-all;
+}

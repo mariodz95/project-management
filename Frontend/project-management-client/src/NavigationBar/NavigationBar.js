@@ -10,7 +10,7 @@ class NavigationBar extends React.Component {
             <Nav.Link href="/home">Organizations</Nav.Link>
           </Nav.Item>
           <Nav.Item>
-            <Nav.Link eventKey="link-1">Loooonger NavLink</Nav.Link>
+            <Nav.Link href="/projects">Projects</Nav.Link>
           </Nav.Item>
           <Nav.Item>
             <Nav.Link eventKey="link-2">Link</Nav.Link>

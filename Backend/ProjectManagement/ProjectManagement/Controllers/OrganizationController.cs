@@ -9,9 +9,7 @@ using ProjectManagement.Models;
 using ProjectManagement.Models.ProjectManagement;
 using Service.Common.ProjectManagement;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace ProjectManagement.Controllers
