@@ -15,6 +15,8 @@ namespace ProjectManagement.Models
             CreateMap<UpdateViewModel, IUserModel>().ReverseMap();
             CreateMap<OrganizationViewModel, IOrganizationModel>().ReverseMap();
             CreateMap<ProjectViewModel, IProjectModel>().ReverseMap();
+            CreateMap<UserViewModel, IUserModel>().ReverseMap();
+            CreateMap<UserProjectViewModel, IUserProjectModel>().ReverseMap();
         }
     }
 }

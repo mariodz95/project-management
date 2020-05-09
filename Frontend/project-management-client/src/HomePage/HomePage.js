@@ -18,6 +18,7 @@ class HomePage extends React.Component {
       pages: 0,
     };
   }
+
   componentDidMount() {
     if (this.props.allOrganizations === undefined) {
       this.props.getAllOrganizations(
@@ -36,6 +37,7 @@ class HomePage extends React.Component {
       this.props.pageSize
     );
   };
+
   render() {
     const { user } = this.props;
     return (

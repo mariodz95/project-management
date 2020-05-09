@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAL.Migrations
 {
     [DbContext(typeof(ProjectManagementContext))]
-    [Migration("20200430095307_InitialCreate")]
+    [Migration("20200501152212_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -87,9 +87,6 @@ namespace DAL.Migrations
 
                     b.Property<string>("State")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Zip")
                         .HasColumnType("nvarchar(max)");
@@ -290,7 +287,7 @@ namespace DAL.Migrations
                     b.Property<string>("LastName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("OrganizationId")
+                    b.Property<Guid>("OrganizationId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("OrganizationRoleId")
@@ -428,7 +425,9 @@ namespace DAL.Migrations
                 {
                     b.HasOne("DAL.Entities.Organization", "Organization")
                         .WithMany("User")
-                        .HasForeignKey("OrganizationId");
+                        .HasForeignKey("OrganizationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("DAL.Entities.OrganizationRole", "OrganizationRole")
                         .WithMany("User")

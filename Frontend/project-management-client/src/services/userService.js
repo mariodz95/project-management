@@ -32,15 +32,16 @@ function logout() {
   localStorage.removeItem("user");
 }
 
-function getAll() {
+function getAll(organizationId) {
   const requestOptions = {
     method: "GET",
     headers: authHeader(),
   };
 
-  return fetch(`https://localhost:44301/users`, requestOptions).then(
-    handleResponse
-  );
+  return fetch(
+    `https://localhost:44301/users/getall/${organizationId}`,
+    requestOptions
+  ).then(handleResponse);
 }
 
 function getById(id) {

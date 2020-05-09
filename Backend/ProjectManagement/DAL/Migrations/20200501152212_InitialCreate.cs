@@ -22,8 +22,7 @@ namespace DAL.Migrations
                     City = table.Column<string>(nullable: true),
                     State = table.Column<string>(nullable: true),
                     Zip = table.Column<string>(nullable: true),
-                    Country = table.Column<string>(nullable: true),
-                    UserId = table.Column<Guid>(nullable: false)
+                    Country = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -89,7 +88,7 @@ namespace DAL.Migrations
                     Username = table.Column<string>(nullable: true),
                     PasswordHash = table.Column<byte[]>(nullable: true),
                     PasswordSalt = table.Column<byte[]>(nullable: true),
-                    OrganizationId = table.Column<Guid>(nullable: true),
+                    OrganizationId = table.Column<Guid>(nullable: false),
                     OrganizationRoleId = table.Column<Guid>(nullable: true)
                 },
                 constraints: table =>
@@ -100,7 +99,7 @@ namespace DAL.Migrations
                         column: x => x.OrganizationId,
                         principalTable: "Organization",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Users_OrganizationRole_OrganizationRoleId",
                         column: x => x.OrganizationRoleId,
@@ -170,13 +169,13 @@ namespace DAL.Migrations
                         column: x => x.ProjectId,
                         principalTable: "Project",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.NoAction);
                     table.ForeignKey(
                         name: "FK_UserProject_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.NoAction);
                 });
 
             migrationBuilder.CreateTable(

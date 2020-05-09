@@ -17,6 +17,5 @@ namespace DAL.Entities
         public OrganizationRole OrganizationRole { get; set; }
         public IEnumerable<User> User { get; set; }
         public IEnumerable<Project> Project { get; set; }
-        public Guid UserId { get; set; }
     }
 }

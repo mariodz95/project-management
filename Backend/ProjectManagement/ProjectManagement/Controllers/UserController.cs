@@ -41,13 +41,14 @@ namespace WebApi.Controllers
 
             var tokenString = userService.GetToken(user);
 
+            //TODO user roles
             var userModel = new UserViewModel()
             {
                 Id = user.Id,
                 Username = user.Username,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
-                Role = user.UserRole.Abrv,
+                //Role = user.UserRole.Abrv,
                 Token = tokenString
             };
 
@@ -70,29 +71,20 @@ namespace WebApi.Controllers
             }
         }
 
-        [Authorize(Roles = Role.Admin)]
-        [HttpGet]
-        public async Task<IActionResult> GetAll(int pageSize, int totalPages, int pageNumber, string sort = null,  string search = null)
+        //[Authorize(Roles = Role.Admin)]
+        [AllowAnonymous]
+        [HttpGet("getall/{organizationId}")]
+        public async Task<IActionResult> GetAll(Guid organizationId)
         {
-            IFiltering filtering = new Filtering
+            try
             {
-                FilterValue = search
-            };
-
-            ISorting sorting = new Sorting
+                var users = await userService.GetAll(organizationId);
+                return Ok(users);
+            }
+            catch (AppException ex)
             {
-                SortOrder = sort
-            };
-
-            IPaging paging = new Paging
-            {
-                PageNumber = pageNumber,
-                PageSize = pageSize,
-                TotalPages = totalPages
-            };
-
-            var users = await userService.GetAll(filtering, sorting, paging);
-            return Ok(users);
+                return BadRequest(new { message = ex.Message });
+            }
         }
 
         [Authorize(Roles = Role.Admin)]

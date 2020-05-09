@@ -5,7 +5,7 @@ class NavigationBar extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <Nav fill variant="tabs" defaultActiveKey="/home">
+        <Nav fill variant="tabs">
           <Nav.Item>
             <Nav.Link href="/home">Organizations</Nav.Link>
           </Nav.Item>
@@ -13,7 +13,7 @@ class NavigationBar extends React.Component {
             <Nav.Link href="/projects">Projects</Nav.Link>
           </Nav.Item>
           <Nav.Item>
-            <Nav.Link eventKey="link-2">Link</Nav.Link>
+            <Nav.Link>Link</Nav.Link>
           </Nav.Item>
           <Nav.Item>
             <Nav.Link eventKey="disabled" disabled>

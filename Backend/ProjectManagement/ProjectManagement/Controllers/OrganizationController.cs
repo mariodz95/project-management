@@ -5,7 +5,6 @@ using Common.Sort_Pag_Flt;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Model.Common.ProjectManagement;
-using ProjectManagement.Models;
 using ProjectManagement.Models.ProjectManagement;
 using Service.Common.ProjectManagement;
 using System;

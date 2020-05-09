@@ -5,10 +5,11 @@ import { getAllProjects, deleteProject } from "../actions/projectActions";
 import ReactPaginate from "react-paginate";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { Table, Button } from "react-bootstrap";
+import { Table, Form, Button, FormControl, Row, Col } from "react-bootstrap";
 import "../styles/HomePage.css";
 import { FiDelete } from "react-icons/fi";
 import { IconContext } from "react-icons";
+import "../styles/HomePage.css";
 
 class ProjectPage extends React.Component {
   constructor(props) {
@@ -17,6 +18,7 @@ class ProjectPage extends React.Component {
     this.state = {
       data: [],
       pages: 0,
+      search: "",
     };
   }
 
@@ -24,7 +26,8 @@ class ProjectPage extends React.Component {
     this.props.getAllProjects(
       this.props.user.id,
       this.props.pageCount,
-      this.props.pageSize
+      this.props.pageSize,
+      this.state.search
     );
   }
 
@@ -33,39 +36,73 @@ class ProjectPage extends React.Component {
     this.props.getAllProjects(
       this.props.user.id,
       selected,
-      this.props.pageSize
+      this.props.pageSize,
+      this.state.search
+    );
+  };
+
+  handleChange = (event) => {
+    this.setState({ search: event.target.value });
+  };
+
+  onSearchClick = () => {
+    this.props.getAllProjects(
+      this.props.user.id,
+      this.props.pageCount,
+      this.props.pageSize,
+      this.state.search
     );
   };
 
   deleteProject = (project) => {
     this.props.deleteProject(project.id);
   };
-
   render() {
     return (
       <React.Fragment>
         <NavigationBar />
-        <Link to="/createproject" className="btn btn-link">
-          Create New Project
-        </Link>{" "}
-        <div className="table">
-          {this.props.allProjects.length !== 0 ? (
-            <React.Fragment>
-              <Table striped bordered hover>
-                <thead>
-                  <tr>
-                    <th>Name</th>
-                    <th>Description</th>
-                    <th>Delete</th>
-                  </tr>
-                </thead>
-                {this.props.allProjects.map((item, index) => (
-                  <tbody key={index}>
+        <div className="container-fluid">
+          <div className="searchForm">
+            <Row xs={4} md={4} lg={6}>
+              <Col>
+                <Link to="/createproject" className="btn btn-link">
+                  Create New Project
+                </Link>{" "}
+              </Col>
+              <Col>
+                <Form inline>
+                  <FormControl
+                    type="text"
+                    placeholder="Search"
+                    className="mr-sm-2"
+                    onChange={(e) => {
+                      this.handleChange(e);
+                    }}
+                  />
+                  <Button variant="outline-info" onClick={this.onSearchClick}>
+                    Search
+                  </Button>
+                </Form>
+              </Col>
+            </Row>
+          </div>
+          <div className="table">
+            {this.props.allProjects.length !== 0 ? (
+              <React.Fragment>
+                <Table striped bordered hover>
+                  <thead>
                     <tr>
-                      <td>{item.name}</td>
-                      <td>{item.description}</td>
-                      <td>
-                        <button>
+                      <th>Name</th>
+                      <th>Description</th>
+                      <th>Delete</th>
+                    </tr>
+                  </thead>
+                  {this.props.allProjects.map((item, index) => (
+                    <tbody key={index}>
+                      <tr>
+                        <td>{item.name}</td>
+                        <td>{item.description}</td>
+                        <td>
                           <IconContext.Provider
                             value={{
                               color: "blue",
@@ -73,39 +110,49 @@ class ProjectPage extends React.Component {
                               className: "global-class-name",
                             }}
                           >
-                            <div
-                              onClick={() => {
-                                this.deleteProject(item);
+                            <div>
+                              <span
+                                onClick={() => {
+                                  this.deleteProject(item);
+                                }}
+                              >
+                                <FiDelete />
+                              </span>
+                            </div>
+                            <Link
+                              to={{
+                                pathname: "/createproject",
+                                state: { item: item },
                               }}
                             >
-                              <FiDelete />
-                            </div>
+                              Edit
+                            </Link>
                           </IconContext.Provider>
-                        </button>
-                      </td>
-                    </tr>
-                  </tbody>
-                ))}
-              </Table>
-              <div className="pagination">
-                <ReactPaginate
-                  previousLabel={"previous"}
-                  nextLabel={"next"}
-                  breakLabel={"..."}
-                  breakClassName={"break-me"}
-                  pageCount={this.props.pageCount}
-                  marginPagesDisplayed={2}
-                  pageRangeDisplayed={5}
-                  onPageChange={this.handlePageClick}
-                  containerClassName={"pagination"}
-                  subContainerClassName={"pages pagination"}
-                  activeClassName={"active"}
-                />
-              </div>
-            </React.Fragment>
-          ) : (
-            <div className="message"> "No organizations for display!"</div>
-          )}
+                        </td>
+                      </tr>
+                    </tbody>
+                  ))}
+                </Table>
+                <div className="pagination">
+                  <ReactPaginate
+                    previousLabel={"previous"}
+                    nextLabel={"next"}
+                    breakLabel={"..."}
+                    breakClassName={"break-me"}
+                    pageCount={this.props.pageCount}
+                    marginPagesDisplayed={2}
+                    pageRangeDisplayed={5}
+                    onPageChange={this.handlePageClick}
+                    containerClassName={"pagination"}
+                    subContainerClassName={"pages pagination"}
+                    activeClassName={"active"}
+                  />
+                </div>
+              </React.Fragment>
+            ) : (
+              <div className="message"> "No projects for display!"</div>
+            )}
+          </div>
         </div>
       </React.Fragment>
     );

@@ -56,12 +56,13 @@ namespace Service
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(appSettings.Secret);
+            //TODO user roles
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
                     new Claim(ClaimTypes.Name, user.Id.ToString()),
-                    new Claim(ClaimTypes.Role, user.UserRole.Abrv),
+                    //new Claim(ClaimTypes.Role, user.UserRole.Abrv),
                     user.OrganizationRole != null ? new Claim(ClaimTypes.Role, user.OrganizationRole.Abrv) : null,
                 }),
                 Expires = DateTime.UtcNow.AddHours(9),
@@ -73,9 +74,9 @@ namespace Service
             return tokenString;
         }
 
-        public async Task<List<IUserModel>> GetAll(IFiltering filterObj, ISorting sortObj, IPaging pagingObj)
+        public async Task<List<IUserModel>> GetAll(Guid organizationId)
         {
-            var users = await userRepository.GetAllAsync();
+            var users = await userRepository.GetAllByOrganizationIdAsync(organizationId);
             return mapper.Map<List<IUserModel>>(users);
         }
 
@@ -109,17 +110,18 @@ namespace Service
             newUser.PasswordHash = passwordHash;
             newUser.PasswordSalt = passwordSalt;
 
-            var userRole = new UserRole
-            {
-                Id = Guid.NewGuid(),
-                DateUpdated = DateTime.Now,
-                DateCreated = DateTime.Now,
-                Name = Role.User,
-                Abrv = Role.User,
-                UserId = newUser.Id,
-            };
+            //TODO user roles
+            //var userRole = new UserRole
+            //{
+            //    Id = Guid.NewGuid(),
+            //    DateUpdated = DateTime.Now,
+            //    DateCreated = DateTime.Now,
+            //    Name = Role.User,
+            //    Abrv = Role.User,
+            //    UserId = newUser.Id,
+            //};
 
-            newUser.UserRole = userRole;
+            //newUser.UserRole = userRole;
             await userRepository.CreateAsync(newUser);
            
             return mapper.Map<IUserModel>(newUser);

@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Repository.Common;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Repository
@@ -20,14 +21,14 @@ namespace Repository
 
         public async Task<User> GetUserAsync(string username)
         {
-            var user = await context.Users.FirstOrDefaultAsync(x => x.Username == username);
-            user.UserRole = await context.UserRole.FirstOrDefaultAsync(u => u.UserId == user.Id);
+            var user = await context.Users.AsNoTracking().FirstOrDefaultAsync(x => x.Username == username);
+            user.UserRole = await context.UserRole.AsNoTracking().FirstOrDefaultAsync(u => u.UserId == user.Id);
             return user;
         }
 
-        public async Task<IEnumerable<User>> GetAllAsync()
+        public async Task<IEnumerable<User>> GetAllByOrganizationIdAsync(Guid organizationId)
         {
-            return  await context.Users.ToListAsync();
+            return  await context.Users.AsNoTracking().ToListAsync();
         }
 
         public async Task<int> CreateAsync(User user)
@@ -39,7 +40,7 @@ namespace Repository
 
         public async Task<DAL.Entities.User> GetByIdAsync(Guid id)
         {
-            var user = await context.Users.FirstOrDefaultAsync(u => u.Id == id);
+            var user = await context.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Id == id);
             return user;
         }
 

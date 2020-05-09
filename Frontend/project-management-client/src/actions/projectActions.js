@@ -27,10 +27,13 @@ export const createProject = (project, id) => (dispatch) => {
   }
 };
 
-export const getAllProjects = (userId, pageCount, pageSize) => (dispatch) => {
+export const getAllProjects = (userId, pageCount, pageSize, search) => (
+  dispatch
+) => {
   dispatch(request());
-  projectService.getAll(userId, pageCount, pageSize).then(
+  projectService.getAll(userId, pageCount, pageSize, search).then(
     (data) => {
+      console.log("Testiranje", data);
       dispatch(success(data.projects, userId));
       dispatch(getPageCount(data.totalPages));
     },
@@ -55,13 +58,13 @@ export const getAllProjects = (userId, pageCount, pageSize) => (dispatch) => {
 };
 
 export const deleteProject = (id) => (dispatch) => {
-  // dispatch(request());
+  dispatch(request());
   projectService._deleteProject(id).then(
-    (id) => {
+    (data) => {
       dispatch(success(id));
     },
     (error) => {
-      // dispatch(failure(error));
+      dispatch(failure(error));
       dispatch(displayError(error));
     }
   );
@@ -74,5 +77,29 @@ export const deleteProject = (id) => (dispatch) => {
   }
   function failure(error) {
     return { type: projectConstants.DELETE_FAILURE, error };
+  }
+};
+
+export const updateProject = (id, project) => (dispatch) => {
+  dispatch(request());
+  projectService.updateProject(id, project).then(
+    (data) => {
+      dispatch(success(project));
+      history.push("/projects");
+    },
+    (error) => {
+      dispatch(failure(error));
+      dispatch(displayError(error));
+    }
+  );
+
+  function request() {
+    return { type: projectConstants.UPDATE_REQUEST };
+  }
+  function success(project) {
+    return { type: projectConstants.UPDATE_SUCCESS, project };
+  }
+  function failure(error) {
+    return { type: projectConstants.UPDATE_FAILURE, error };
   }
 };

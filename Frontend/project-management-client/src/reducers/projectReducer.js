@@ -1,4 +1,5 @@
 import { projectConstants } from "../constants/projectConstants";
+import { act } from "react-dom/test-utils";
 
 const initialState = {
   allProjects: [],
@@ -7,6 +8,10 @@ const initialState = {
   newProject: {},
   loading: false,
   error: {},
+  edit: false,
+  deleting: false,
+  deleteError: null,
+  updateError: null,
 };
 
 export default function projects(state = initialState, action) {
@@ -35,37 +40,41 @@ export default function projects(state = initialState, action) {
     case projectConstants.GET_PAGE_COUNT: {
       return { ...state, pageCount: action.pageCount };
     }
-    // case projectConstants.DELETE_REQUEST:
-    //   // add 'deleting:true' property to project being deleted
-    //   return {
-    //     ...state,
-    //     allProjects: state.allProjects.map((user) =>
-    //       user.id === action.id ? { ...user, deleting: true } : user
-    //     ),
-    //   };
-    case projectConstants.DELETE_SUCCESS:
-      // remove deleted project from state
+    case projectConstants.DELETE_REQUEST:
       return {
         ...state,
-        allProjects: state.allProjects.filter(
-          (item, index) => item.id === action.id
-        ),
+        deleting: true,
       };
-    // case projectConstants.DELETE_FAILURE:
-    //   // remove 'deleting:true' property and add 'deleteError:[error]' property to user
-    //   return {
-    //     ...state,
-    //     items: state.items.map((user) => {
-    //       if (user.id === action.id) {
-    //         // make copy of user without 'deleting:true' property
-    //         const { deleting, ...userCopy } = user;
-    //         // return copy of user with 'deleteError:[error]' property
-    //         return { ...userCopy, deleteError: action.error };
-    //       }
+    case projectConstants.DELETE_SUCCESS:
+      return {
+        ...state,
+        allProjects: state.allProjects.filter((item) => item.id !== action.id),
+      };
+    case projectConstants.DELETE_FAILURE:
+      return {
+        ...state,
+        allProjects: state.allProjects.map((project) => {
+          if (project.id === action.id) {
+            return { deleteError: action.error };
+          }
 
-    //       return user;
-    //     }),
-    //   };
+          return project;
+        }),
+      };
+    case projectConstants.UPDATE_REQUEST: {
+      return {
+        ...state,
+        edit: true,
+      };
+    }
+    case projectConstants.UPDATE_SUCCESS:
+      return {
+        ...state,
+        allProjects: state.allProjects.concat(action.project),
+      };
+    case projectConstants.UPDATE_FAILURE: {
+      return { ...state, updateError: action.error };
+    }
     default:
       return state;
   }

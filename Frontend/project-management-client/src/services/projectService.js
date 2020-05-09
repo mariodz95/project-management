@@ -4,6 +4,7 @@ export const projectService = {
   createProject,
   getAll,
   _deleteProject,
+  updateProject,
 };
 
 function createProject(project, id) {
@@ -18,21 +19,35 @@ function createProject(project, id) {
   ).then(handleResponse);
 }
 
-function getAll(userId, pageNumber, pageSize) {
+function getAll(userId, pageNumber, pageSize, search) {
   const requestOptions = {
     method: "GET",
     headers: authHeader(),
   };
 
   return fetch(
-    `https://localhost:44301/project/getall/${userId}&${pageNumber}&${pageSize}`,
+    `https://localhost:44301/project/getall/${userId}&${pageNumber}&${pageSize}/${search}`,
+    requestOptions
+  ).then(handleResponse);
+}
+
+function updateProject(id, project) {
+  console.log("update", project);
+  const requestOptions = {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(project),
+  };
+
+  return fetch(
+    `https://localhost:44301/project/update/${id}`,
     requestOptions
   ).then(handleResponse);
 }
 
 function _deleteProject(id) {
   const requestOptions = {
-    method: "POST",
+    method: "DELETE",
     headers: authHeader(),
   };
 

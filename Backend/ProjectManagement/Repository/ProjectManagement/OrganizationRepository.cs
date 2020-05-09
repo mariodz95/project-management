@@ -22,7 +22,7 @@ namespace Repository.ProjectManagement
 
         public async Task<bool> CheckIfExistAsync(string name)
         {
-            var exist = await context.Organization.AnyAsync(o => o.Name == name);
+            var exist = await context.Organization.AsNoTracking().AnyAsync(o => o.Name == name);
             return exist;
         }
 
@@ -49,11 +49,11 @@ namespace Repository.ProjectManagement
 
             if (pagingEnabled)
             {
-                return await query.Skip((paging.PageNumber - 1) * paging.PageSize).Take(paging.PageSize).ToListAsync();
+                return await query.Skip((paging.PageNumber - 1) * paging.PageSize).Take(paging.PageSize).AsNoTracking().ToListAsync();
             }
             else
             {
-                return await query.Where(o => o.UserId == userId).ToListAsync();
+                return await query.AsNoTracking().ToListAsync();
             }
         }
     }

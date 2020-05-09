@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Common.Helpers;
 using Common.Interface_Sort_Pag_Flt;
-using Common.Sort_Pag_Flt;
 using DAL.Entities;
 using Model.Common.ProjectManagement;
 using Repository.Common.ProjectManagement;
@@ -42,7 +41,7 @@ namespace Service.ProjectManagement
             newOrganization.Abrv = organization.Name.ToLower();
             newOrganization.DateCreated = DateTime.Now;
             newOrganization.DateUpdated = DateTime.Now;
-            newOrganization.UserId = userId;
+            //newOrganization.UserId = userId;
 
 
             var organizationRole = new OrganizationRole

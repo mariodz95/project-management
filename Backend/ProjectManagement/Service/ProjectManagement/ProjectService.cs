@@ -2,7 +2,12 @@
 using Common.Helpers;
 using Common.Interface_Sort_Pag_Flt;
 using DAL.Entities;
+using Microsoft.EntityFrameworkCore.Query;
+using Microsoft.Extensions.Caching.Memory;
+using Model;
+using Model.Common;
 using Model.Common.ProjectManagement;
+using Repository.Common;
 using Repository.Common.ProjectManagement;
 using Service.Common.ProjectManagement;
 using System;
@@ -15,11 +20,13 @@ namespace Service.ProjectManagement
     {
         private IProjectRepository projectRepository;
         private IMapper mapper;
+        private IUserRepository userRepository;
 
-        public ProjectService(IProjectRepository projectRepository, IMapper mapper)
+        public ProjectService(IProjectRepository projectRepository, IMapper mapper, IUserRepository userRepository)
         {
             this.projectRepository = projectRepository;
             this.mapper = mapper;
+            this.userRepository = userRepository;
         }
 
         public async Task<IProjectModel> CreateAsync(Guid userId, IProjectModel project)
@@ -41,36 +48,46 @@ namespace Service.ProjectManagement
             newProject.DateCreated = DateTime.Now;
             newProject.DateUpdated = DateTime.Now;
             newProject.OwnerId = userId;
-            newProject.OrganizationId = Guid.Parse("EFAD2DBD-15F3-4EFA-8B83-2997C3C06697");
-            //TODO project role
-            //var organizationRole = new OrganizationRole
-            //{
-            //    Id = Guid.NewGuid(),
-            //    DateUpdated = DateTime.Now,
-            //    DateCreated = DateTime.Now,
-            //    Name = Role.User,
-            //    Abrv = Role.User,
-            //    UserId = userId,
-            //    OrganizationId = newOrganization.Id,
-            //};
 
-            //newOrganization.OrganizationRole = organizationRole;
-            await projectRepository.CreateAsync(newProject);
+            UserProject userProject = new UserProject();
+            foreach (var item in project.Users) {
+                var user = await userRepository.GetByIdAsync(item.Id);
+                userProject.ProjectId = newProject.Id;
+                userProject.UserId = item.Id;
+                userProject.Project = newProject;
+                await projectRepository.AddUsersToProjectAsync(userProject);
+            }
             return mapper.Map<IProjectModel>(newProject);
         }
 
         public async Task<int> DeleteAsync(Guid id)
         {
             var project = await projectRepository.GetByIdAsync(id);
-            var result = await projectRepository.DeleteAsync(project);
-            return result;
+            return await projectRepository.DeleteAsync(project);
         }
 
-        public async Task<IEnumerable<IProjectModel>> GetAllAsync(Guid userId, IPaging paging)
+        public async Task<IEnumerable<IProjectModel>> GetAllAsync(Guid userId, IPaging paging, IFiltering filtering)
         {
+            var projects = await projectRepository.GetAllAsync(userId, paging, filtering);
+            var mapList = mapper.Map<IEnumerable<IProjectModel>>(projects);
+            return mapList; 
+        }
 
-            var projects = await projectRepository.GetAllAsync(userId, paging);
-            return mapper.Map<IEnumerable<IProjectModel>>(projects);
+        public async Task<int> UpdateAsync(Guid id, IProjectModel project)
+        {
+            var existingProject = await projectRepository.GetByIdAsync(id);
+            
+            if (existingProject == null)
+            {
+                throw new AppException("Project name \"" + project.Name + "\" doesnt exist");
+            }
+
+            existingProject.Name = project.Name;
+            existingProject.DateUpdated = DateTime.Now;
+            existingProject.Abrv = project.Name.ToLower();
+            existingProject.Description = project.Description;
+            var result = await projectRepository.UpdateAsync(existingProject);
+            return result; 
         }
     }
 }

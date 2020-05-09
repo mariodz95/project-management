@@ -9,7 +9,6 @@ using ProjectManagement.Models.ProjectManagement;
 using Service.Common.ProjectManagement;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace ProjectManagement.Controllers
@@ -45,7 +44,7 @@ namespace ProjectManagement.Controllers
         }
 
         [AllowAnonymous]
-        [HttpPost("delete/{id}")]
+        [HttpDelete("delete/{id}")]
         public async Task<IActionResult> DeleteProject(Guid id)
         {
             try
@@ -60,9 +59,19 @@ namespace ProjectManagement.Controllers
         }
 
         [AllowAnonymous]
-        [HttpGet("getall/{userId}&{pageNumber}&{pageSize}")]
-        public async Task<IActionResult> GetAll(Guid userId, int pageNumber = 0, int pageSize = 10)
+        [HttpGet("getall/{userId}&{pageNumber}&{pageSize}/{search?}")]
+        public async Task<IActionResult> GetAll(Guid userId, int pageNumber = 0, int pageSize = 10, string? search = null/*, string sort = null*/)
         {
+            IFiltering filtering = new Filtering
+            {
+                FilterValue = search
+            };
+
+            //ISorting sorting = new Sorting
+            //{
+            //    SortOrder = sort
+            //};
+
             IPaging paging = new Paging
             {
                 PageNumber = pageNumber,
@@ -70,9 +79,25 @@ namespace ProjectManagement.Controllers
                 TotalPages = 0
             };
 
-            var allProjects = await projectService.GetAllAsync(userId, paging);
+            var allProjects = await projectService.GetAllAsync(userId, paging, filtering);
+            var mapProjects = mapper.Map<IEnumerable<ProjectViewModel>>(allProjects);
+            return Ok(new { projects = mapProjects, totalPages = paging.TotalPages });
+        }
 
-            return Ok(new { projects = mapper.Map<IEnumerable<ProjectViewModel>>(allProjects), totalPages = paging.TotalPages });
+        [AllowAnonymous]
+        [HttpPost("update/{id}")]
+        public async Task<IActionResult> Update(Guid id, [FromBody]ProjectViewModel newProject)
+        {
+            try
+            {
+                var project = mapper.Map<IProjectModel>(newProject);
+                await projectService.UpdateAsync(id, project);
+                return Ok();
+            }
+            catch (AppException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
     }
 }

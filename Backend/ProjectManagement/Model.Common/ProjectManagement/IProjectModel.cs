@@ -1,6 +1,6 @@
 ﻿using Model.Common.Base;
 using System;
-
+using System.Collections.Generic;
 
 namespace Model.Common.ProjectManagement
 {
@@ -11,5 +11,7 @@ namespace Model.Common.ProjectManagement
         public Guid OwnerId { get; set; }
         public Guid OrganizationId { get; set; }
         public IOrganizationModel Organization { get; set; }
+        public IEnumerable<IUserModel> Users { get; set; }
+        public IEnumerable<IUserProjectModel> UserProject { get; set; }
     }
 }

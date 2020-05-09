@@ -59,10 +59,9 @@ export const logout = () => {
   return { type: userConstants.LOGOUT };
 };
 
-export const getAll = () => (dispatch) => {
+export const getAll = (organizationId) => (dispatch) => {
   dispatch(request());
-
-  userService.getAll().then(
+  userService.getAll(organizationId).then(
     (users) => dispatch(success(users)),
     (error) => {
       dispatch(failure(error));

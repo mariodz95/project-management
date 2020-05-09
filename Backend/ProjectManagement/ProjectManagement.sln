@@ -21,11 +21,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Service.Common", "Service.C
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "Common\Common.csproj", "{0E17826A-41A0-4111-88AF-41C52BFDD6F8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Repository.Tests", "Repository.Test\Repository.Tests.csproj", "{36360878-B8FF-4939-8BD6-8DDAF61CC756}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Repository.Tests", "Repository.Test\Repository.Tests.csproj", "{36360878-B8FF-4939-8BD6-8DDAF61CC756}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service.tTests", "Service.tTests\Service.tTests.csproj", "{886B29B3-3F07-4073-8A86-21365B3BDAD2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Service.Tests", "Service.tTests\Service.Tests.csproj", "{886B29B3-3F07-4073-8A86-21365B3BDAD2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectManagement.Tests", "ProjectManagement.Tests\ProjectManagement.Tests.csproj", "{60FB7A6E-5B71-4CE3-8E97-603F2832AB9E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectManagement.Tests", "ProjectManagement.Tests\ProjectManagement.Tests.csproj", "{60FB7A6E-5B71-4CE3-8E97-603F2832AB9E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
