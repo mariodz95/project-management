@@ -33,7 +33,6 @@ export const getAllProjects = (userId, pageCount, pageSize, search) => (
   dispatch(request());
   projectService.getAll(userId, pageCount, pageSize, search).then(
     (data) => {
-      console.log("Testiranje", data);
       dispatch(success(data.projects, userId));
       dispatch(getPageCount(data.totalPages));
     },

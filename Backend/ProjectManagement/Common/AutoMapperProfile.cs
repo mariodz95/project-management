@@ -16,6 +16,7 @@ namespace Common.Helpers
             CreateMap<OrganizationRole, IOrganizationRoleModel>().ReverseMap();
             CreateMap<Project, IProjectModel>().ReverseMap();
             CreateMap<UserProject, IUserProjectModel>().ReverseMap();
+            CreateMap<ITaskModel, DAL.Entities.Task>().ReverseMap();
         }
     }
 }

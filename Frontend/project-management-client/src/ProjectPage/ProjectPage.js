@@ -100,7 +100,17 @@ class ProjectPage extends React.Component {
                   {this.props.allProjects.map((item, index) => (
                     <tbody key={index}>
                       <tr>
-                        <td>{item.name}</td>
+                        <td>
+                          {" "}
+                          <Link
+                            to={{
+                              pathname: "/taskpage",
+                              state: { item: item },
+                            }}
+                          >
+                            {item.name}
+                          </Link>
+                        </td>
                         <td>{item.description}</td>
                         <td>
                           <IconContext.Provider

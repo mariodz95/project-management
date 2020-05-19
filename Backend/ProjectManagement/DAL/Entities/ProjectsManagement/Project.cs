@@ -9,7 +9,6 @@ namespace DAL.Entities
         public string Abrv { get; set; }
         public string Description { get; set; }
         public Guid OwnerId { get; set; }
-        public List<TaskCategory> TaskCategory { get; set; }
         public List<Task> Task { get; set; }
         public IEnumerable<UserProject> UserProject { get; set; }
     }

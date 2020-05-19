@@ -9,8 +9,6 @@ namespace DAL.Entities
         public string Abrv { get; set; }
         public string Priority { get; set; }
         public string Estimated { get; set; }
-        public Guid TaskCategoryId { get; set; }
-        public TaskCategory TaskCategory { get; set; }
         public Guid ProjectId { get; set; }
         public Project Project { get; set; }
         public User User { get; set; }

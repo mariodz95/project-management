@@ -13,9 +13,6 @@ class NavigationBar extends React.Component {
             <Nav.Link href="/projects">Projects</Nav.Link>
           </Nav.Item>
           <Nav.Item>
-            <Nav.Link>Link</Nav.Link>
-          </Nav.Item>
-          <Nav.Item>
             <Nav.Link eventKey="disabled" disabled>
               Disabled
             </Nav.Link>

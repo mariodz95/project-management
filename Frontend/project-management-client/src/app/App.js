@@ -12,7 +12,8 @@ import { OrganizationPage } from "../OrganizationPage/OrganizationPage";
 import { CreateOrganizationPage } from "../OrganizationPage/CreateOrganizationPage";
 import { ProjectPage } from "../ProjectPage/ProjectPage";
 import { CreateProjectPage } from "../ProjectPage/CreateProjectPage";
-
+import { TaskPage } from "../TaskPage/TaskPage";
+import { TaskFormPage } from "../TaskPage/TaskFormPage";
 import "../styles/App.css";
 
 class App extends React.Component {
@@ -35,6 +36,8 @@ class App extends React.Component {
           <Route path="/organization" component={OrganizationPage} />
           <Route path="/projects" component={ProjectPage} />
           <Route path="/createproject" component={CreateProjectPage} />
+          <Route path="/taskpage" component={TaskPage} />
+          <Route path="/taskfrom" component={TaskFormPage} />
           <Route
             path="/createorganization"
             component={CreateOrganizationPage}

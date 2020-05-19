@@ -30,7 +30,6 @@ namespace DAL
         public DbSet<User> Users { get; set; }
         public DbSet<UserRole> UserRole { get; set; }
         public DbSet<Comment> Comment { get; set; }
-        public DbSet<TaskCategory> TaskCategory { get; set; }
         public DbSet<Task> Task { get; set; }
         public DbSet<Project> Project { get; set; }
         public DbSet<ProjectRole> ProjectRole { get; set; }
