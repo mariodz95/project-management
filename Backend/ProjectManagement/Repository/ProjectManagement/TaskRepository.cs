@@ -1,7 +1,10 @@
-﻿using DAL;
+﻿using Common.Interface_Sort_Pag_Flt;
+using DAL;
 using Microsoft.EntityFrameworkCore;
 using Repository.Common.ProjectManagement;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Repository.ProjectManagement
@@ -24,6 +27,30 @@ namespace Repository.ProjectManagement
         {
             await context.Task.AddAsync(task);
             return await context.SaveChangesAsync();
+        }
+
+        public async Task<IEnumerable<DAL.Entities.Task>> GetAllAsync(Guid projectId, IPaging paging)
+        {
+            bool pagingEnabled = paging.PageSize > 0;
+            var query = context.Task;
+
+            if (pagingEnabled)
+            {
+                paging.TotalPages = (int)Math.Ceiling((decimal)query.Count() / (decimal)paging.PageSize);
+            }
+            else
+            {
+                paging.TotalPages = 1;
+            }
+
+            if (pagingEnabled)
+            {
+                return await query.Skip((paging.PageNumber - 1) * paging.PageSize).Take(paging.PageSize).AsNoTracking().ToListAsync();
+            }
+            else
+            {
+                return await query.AsNoTracking().ToListAsync();
+            }
         }
 
         public async Task<Guid> GetProjectIdAsync(string name)

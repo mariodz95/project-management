@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using Common.Helpers;
+using Common.Interface_Sort_Pag_Flt;
 using Model.Common.ProjectManagement;
 using Repository.Common.ProjectManagement;
 using Service.Common.ProjectManagement;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Service.ProjectManagement
@@ -57,6 +59,13 @@ namespace Service.ProjectManagement
 
             await taskRepository.CreateAsync(newTask);
             return mapper.Map<ITaskModel>(newTask);
+        }
+
+        public async Task<IEnumerable<ITaskModel>> GetAllAsync(string projectName, IPaging paging)
+        {
+            var projectId = await taskRepository.GetProjectIdAsync(projectName);
+            var tasks = await taskRepository.GetAllAsync(projectId, paging);
+            return mapper.Map<IEnumerable<ITaskModel>>(tasks);
         }
     }
 }

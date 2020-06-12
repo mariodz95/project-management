@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Common.Interface_Sort_Pag_Flt;
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Repository.Common.ProjectManagement
@@ -9,5 +11,6 @@ namespace Repository.Common.ProjectManagement
         Task<bool> CheckIfExistAsync(string name);
         Task<Guid> GetUserIdAsync(string name);
         Task<Guid> GetProjectIdAsync(string name);
+        Task<IEnumerable<DAL.Entities.Task>> GetAllAsync(Guid projectId, IPaging paging);
     }
 }

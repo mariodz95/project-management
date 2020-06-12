@@ -67,7 +67,7 @@ class ProjectPage extends React.Component {
               <Col>
                 <Link to="/createproject" className="btn btn-link">
                   Create New Project
-                </Link>{" "}
+                </Link>
               </Col>
               <Col>
                 <Form inline>
@@ -101,11 +101,10 @@ class ProjectPage extends React.Component {
                     <tbody key={index}>
                       <tr>
                         <td>
-                          {" "}
                           <Link
                             to={{
                               pathname: "/taskpage",
-                              state: { item: item },
+                              state: { project: item },
                             }}
                           >
                             {item.name}

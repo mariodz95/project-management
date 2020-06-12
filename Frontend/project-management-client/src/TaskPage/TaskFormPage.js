@@ -8,6 +8,7 @@ import { getAll } from "../actions/userActions";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import Select from "react-select";
+import { createTask } from "../actions/taskActions";
 
 const schema = yup.object({
   name: yup
@@ -16,7 +17,6 @@ const schema = yup.object({
     .required("Name is required field"),
   description: yup.string().required("Description is required field"),
   estimated: yup.number(),
-  assign: yup.string().required(),
 });
 
 class TaskFormPage extends React.Component {
@@ -31,7 +31,9 @@ class TaskFormPage extends React.Component {
       description: "",
       priority: "",
       estimated: "",
-      assign: "",
+      assignedOn: null,
+      createdBy: null,
+      projectName: null,
     },
   };
 
@@ -46,7 +48,6 @@ class TaskFormPage extends React.Component {
 
   render() {
     const { selectedOption } = this.state;
-
     var userList = [];
     if (this.props.users.allUsers !== undefined) {
       this.props.users.allUsers.forEach(function (element) {
@@ -65,8 +66,9 @@ class TaskFormPage extends React.Component {
               assign: "",
             }}
             validationSchema={schema}
-            onSubmit={(values, { setSubmitting, resetForm }) => {
-              console.log("Submit", this.state.selectedOption.value);
+            onSubmit={(values, { setSubmitting }) => {
+              var project = JSON.parse(localStorage.getItem("Project"));
+
               this.setState({
                 task: {
                   ...this.state.task,
@@ -74,10 +76,12 @@ class TaskFormPage extends React.Component {
                   description: values.description,
                   priority: values.priority,
                   estimated: values.estimated,
-                  assign: this.state.selectedOption.value,
+                  assignedOn: this.state.selectedOption.value,
+                  createdBy: this.props.user.username,
+                  projectName: project.name,
                 },
               });
-              //this.props.createOrganization(values, this.props.user.id);
+              this.props.createTask(this.state.task);
               setSubmitting(false);
             }}
             validateOnBlur={false}
@@ -161,7 +165,7 @@ class TaskFormPage extends React.Component {
                 <br />
                 <Form.Row>
                   <>
-                    <Link to="/taskpage" className="btn btn-link">
+                    <Link to="/projects" className="btn btn-link">
                       Cancel
                     </Link>
                     <Button
@@ -195,14 +199,17 @@ class TaskFormPage extends React.Component {
 }
 
 TaskFormPage.propTypes = {
+  createTask: PropTypes.func.isRequired,
   getAll: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
+  user: state.authentication.user,
   users: state.users,
 });
 
 const connectedTaskFormPage = connect(mapStateToProps, {
+  createTask,
   getAll,
 })(TaskFormPage);
 export { connectedTaskFormPage as TaskFormPage };

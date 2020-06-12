@@ -57,7 +57,7 @@ class HomePage extends React.Component {
               {user.username}
             </p>
           </Col>
-        </Row>{" "}
+        </Row>
         <div className="table">
           {this.props.organizations.length !== 0 ? (
             <React.Fragment>

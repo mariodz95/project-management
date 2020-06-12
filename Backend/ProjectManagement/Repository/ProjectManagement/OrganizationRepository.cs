@@ -29,8 +29,7 @@ namespace Repository.ProjectManagement
         public async Task<int> CreateAsync(Organization organization)
         {
             await context.Organization.AddAsync(organization);
-            var result = await context.SaveChangesAsync();
-            return result;  
+            return await context.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<Organization>> GetAllAsync(Guid userId, IPaging paging)

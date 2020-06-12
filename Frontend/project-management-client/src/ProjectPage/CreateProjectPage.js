@@ -36,7 +36,6 @@ class CreateProjectPage extends React.Component {
     //TODO change this
     this.props.getAll("D3C01634-1671-4B36-96A9-6AA8BBB77027");
     if (this.props.location.state !== undefined) {
-      console.log("tsasas", this.props.location.state.item.userProject[0]);
       this.addUser(this.props.location.state.item.userProject[0].us);
     } else {
       this.addUser(this.props.user);
@@ -68,7 +67,6 @@ class CreateProjectPage extends React.Component {
     this.setState({ listOfUsers: joined });
   };
   render() {
-    console.log("This. porps", this.props);
     return (
       <React.Fragment>
         <Container className="container">

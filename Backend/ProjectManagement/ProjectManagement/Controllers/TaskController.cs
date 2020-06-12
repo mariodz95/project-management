@@ -1,11 +1,14 @@
 ﻿using AutoMapper;
 using Common.Helpers;
+using Common.Interface_Sort_Pag_Flt;
+using Common.Sort_Pag_Flt;
 using DAL.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Model.Common.ProjectManagement;
 using ProjectManagement.Models.ProjectManagement;
 using Service.Common.ProjectManagement;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ProjectManagement.Controllers
@@ -38,6 +41,23 @@ namespace ProjectManagement.Controllers
             {
                 return BadRequest(new { message = ex.Message });
             }
+        }
+
+        [AllowAnonymous]
+        [HttpGet("getall/{projectName}&{pageNumber}&{pageSize}")]
+        public async Task<IActionResult> GetAll(string projectName, int pageNumber = 0, int pageSize = 10)
+        {
+            IPaging paging = new Paging
+            {
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                TotalPages = 0
+            };
+
+            var tasks = await taskService.GetAllAsync(projectName, paging);
+
+            return Ok(new { tasks = mapper.Map<IEnumerable<TaskViewModel>>(tasks), totalPages = paging.TotalPages });
+
         }
     }
 }
