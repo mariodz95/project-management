@@ -6,6 +6,7 @@ namespace ProjectManagement.Models.ProjectManagement
 {
     public class TaskViewModel
     {
+        public Guid Id { get; set; }
         public string Name { get; set; }
         public string Priority { get; set; }
         public string Estimated { get; set; }

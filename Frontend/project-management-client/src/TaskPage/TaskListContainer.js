@@ -9,7 +9,6 @@ import { TaskList } from "./TaskList";
 class TaskListContainer extends React.Component {
   constructor(props) {
     super(props);
-    this.handleDelete = this.handleDelete.bind(this);
   }
 
   componentDidMount() {
@@ -20,15 +19,15 @@ class TaskListContainer extends React.Component {
     );
   }
 
-  handleDelete() {
+  handleDelete = (taskId) => {
+    console.log("Task id", taskId);
     var answer = window.confirm("Are you sure you want to delete this task?");
     if (answer) {
       // Save it!
-      console.log("Thing was saved to the database.");
     } else {
       // Do nothing!
     }
-  }
+  };
 
   render() {
     return (
