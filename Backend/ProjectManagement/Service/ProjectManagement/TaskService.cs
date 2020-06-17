@@ -55,6 +55,8 @@ namespace Service.ProjectManagement
             newTask.DateCreated = DateTime.Now;
             newTask.DateUpdated = DateTime.Now;
             newTask.ProjectId = projectId;
+            newTask.AssignedOn = task.AssignedOn;
+            newTask.CreatedBy = task.CreatedBy;
             newTask.UserId = userId;
 
             await taskRepository.CreateAsync(newTask);
@@ -66,6 +68,12 @@ namespace Service.ProjectManagement
             var projectId = await taskRepository.GetProjectIdAsync(projectName);
             var tasks = await taskRepository.GetAllAsync(projectId, paging);
             return mapper.Map<IEnumerable<ITaskModel>>(tasks);
+        }
+
+        public async Task<int> DeleteAsync(Guid id)
+        {
+            var task = await taskRepository.GetByIdAsync(id);
+            return await taskRepository.DeleteAsync(task);
         }
     }
 }

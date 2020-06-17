@@ -11,5 +11,6 @@ namespace Service.Common.ProjectManagement
     {
         Task<ITaskModel> CreateAsync(ITaskModel task);
         Task<IEnumerable<ITaskModel>> GetAllAsync(string projectName, IPaging paging);
+        Task<int> DeleteAsync(Guid id);
     }
 }

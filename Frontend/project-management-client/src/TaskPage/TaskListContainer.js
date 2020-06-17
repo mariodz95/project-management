@@ -1,53 +1,46 @@
 import React from "react";
-import { Form, Button, FormControl, Row, Col } from "react-bootstrap";
-import { Link } from "react-router-dom";
-import { getAllTasks } from "../actions/taskActions";
+import { getAllTasks, deleteTask } from "../actions/taskActions";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { TaskList } from "./TaskList";
+import { TaskListPresenter } from "./TaskListPresenter";
 
 class TaskListContainer extends React.Component {
   constructor(props) {
     super(props);
+    this.state = { project: this.props.location.state.project };
   }
 
   componentDidMount() {
     this.props.getAllTasks(
-      this.props.location.state.project,
+      this.state.project,
       this.props.pageCount,
       this.props.pageSize
     );
   }
 
   handleDelete = (taskId) => {
-    console.log("Task id", taskId);
     var answer = window.confirm("Are you sure you want to delete this task?");
     if (answer) {
-      // Save it!
+      this.props.deleteTask(taskId);
     } else {
-      // Do nothing!
     }
+  };
+
+  handlePageClick = (data) => {
+    let selected = data.selected + 1;
+    this.props.getAllTasks(this.state.project, selected, this.props.pageSize);
   };
 
   render() {
     return (
       <React.Fragment>
-        <Row xs={4} md={4} lg={6}>
-          <Col>
-            <Link
-              to={{
-                pathname: "/taskfrom",
-                state: { project: this.props.location.state.project },
-              }}
-            >
-              Create New Task
-            </Link>
-          </Col>
-        </Row>
-        <TaskList
+        <TaskListPresenter
           tasks={this.props.allTasks}
+          project={this.state.project}
+          handlePageClick={this.handlePageClick}
           handleDelete={this.handleDelete}
-        ></TaskList>
+          pageCount={this.props.pageCount}
+        ></TaskListPresenter>
       </React.Fragment>
     );
   }
@@ -56,6 +49,7 @@ class TaskListContainer extends React.Component {
 TaskListContainer.propTypes = {
   getAllTasks: PropTypes.func.isRequired,
   allTasks: PropTypes.array.isRequired,
+  deleteTask: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -66,5 +60,6 @@ const mapStateToProps = (state) => ({
 
 const connectedTaskListContainer = connect(mapStateToProps, {
   getAllTasks,
+  deleteTask,
 })(TaskListContainer);
 export { connectedTaskListContainer as TaskListContainer };

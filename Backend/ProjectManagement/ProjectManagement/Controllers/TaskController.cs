@@ -57,7 +57,21 @@ namespace ProjectManagement.Controllers
             var tasks = await taskService.GetAllAsync(projectName, paging);
 
             return Ok(new { tasks = mapper.Map<IEnumerable<TaskViewModel>>(tasks), totalPages = paging.TotalPages });
+        }
 
+        [AllowAnonymous]
+        [HttpDelete("delete/{id}")]
+        public async Task<IActionResult> DeleteTask(System.Guid id)
+        {
+            try
+            {
+                await taskService.DeleteAsync(id);
+                return Ok();
+            }
+            catch (AppException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
     }
 }

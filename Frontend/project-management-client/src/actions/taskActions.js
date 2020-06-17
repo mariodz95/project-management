@@ -8,7 +8,8 @@ export const createTask = (task) => (dispatch) => {
   taskService.createTask(task).then(
     (task) => {
       dispatch(success(task));
-      history.push("/projects");
+      // history.push("/taskpage");
+      history.goBack();
     },
     (error) => {
       dispatch(failure(error));
@@ -28,8 +29,6 @@ export const createTask = (task) => (dispatch) => {
 };
 
 export const getAllTasks = (projectName, pageCount, pageSize) => (dispatch) => {
-  console.log("Tessadsdast");
-
   dispatch(request());
   taskService.getAll(projectName, pageCount, pageSize).then(
     (data) => {
@@ -53,5 +52,28 @@ export const getAllTasks = (projectName, pageCount, pageSize) => (dispatch) => {
   }
   function getPageCount(pageCount) {
     return { type: taskConstants.GET_PAGE_COUNT, pageCount };
+  }
+};
+
+export const deleteTask = (id) => (dispatch) => {
+  dispatch(request());
+  taskService._deleteTask(id).then(
+    (data) => {
+      dispatch(success(id));
+    },
+    (error) => {
+      dispatch(failure(error));
+      dispatch(displayError(error));
+    }
+  );
+
+  function request() {
+    return { type: taskConstants.DELETE_REQUEST };
+  }
+  function success(id) {
+    return { type: taskConstants.DELETE_SUCCESS, id };
+  }
+  function failure(error) {
+    return { type: taskConstants.DELETE_FAILURE, error };
   }
 };

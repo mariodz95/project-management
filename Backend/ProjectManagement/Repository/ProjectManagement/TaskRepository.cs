@@ -64,5 +64,16 @@ namespace Repository.ProjectManagement
             var user = await context.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Username == name);
             return user.Id;
         }
+
+        public async Task<DAL.Entities.Task> GetByIdAsync(Guid id)
+        {
+            return await context.Task.AsNoTracking().FirstOrDefaultAsync(p => p.Id == id);
+        }
+
+        public async Task<int> DeleteAsync(DAL.Entities.Task task)
+        {
+            context.Remove(task);
+            return await context.SaveChangesAsync();
+        }
     }
 }

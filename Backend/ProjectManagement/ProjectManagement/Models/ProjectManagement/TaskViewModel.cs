@@ -14,5 +14,7 @@ namespace ProjectManagement.Models.ProjectManagement
         public string CreatedBy { get; set; }
         public string AssignedOn { get; set; }
         public string ProjectName { get; set; }
+        public string DateCreated { get; set; }
+        public string DateUpdated { get; set; }
     }
 }

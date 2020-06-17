@@ -14,8 +14,6 @@ const initialState = {
 };
 
 export default function tasks(state = initialState, action) {
-  console.log("prije zadnje{");
-
   switch (action.type) {
     case taskConstants.CREATE_REQUEST: {
       return { ...state, loading: true };
@@ -30,7 +28,6 @@ export default function tasks(state = initialState, action) {
       return { ...state, loading: true };
     }
     case taskConstants.GETALL_SUCCESS: {
-      console.log("Zadnje");
       return {
         ...state,
         allTasks: action.tasks,
@@ -39,6 +36,29 @@ export default function tasks(state = initialState, action) {
     case taskConstants.GETALL_FAILURE: {
       return { ...state, error: action.error };
     }
+    case taskConstants.DELETE_REQUEST:
+      return {
+        ...state,
+        deleting: true,
+      };
+    case taskConstants.GET_PAGE_COUNT: {
+      return { ...state, pageCount: action.pageCount };
+    }
+    case taskConstants.DELETE_SUCCESS:
+      return {
+        ...state,
+        allTasks: state.allTasks.filter((item) => item.id !== action.id),
+      };
+    case taskConstants.DELETE_FAILURE:
+      return {
+        ...state,
+        allTasks: state.allTasks.map((task) => {
+          if (task.id === action.id) {
+            return { deleteError: action.error };
+          }
+          return task;
+        }),
+      };
     default:
       return state;
   }

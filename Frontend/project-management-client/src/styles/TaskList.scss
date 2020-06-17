@@ -1,0 +1,21 @@
+$textSize: 16px;
+$rightMaring: 100px;
+td {
+  font-size: $textSize;
+}
+
+h1 {
+  margin-left: $rightMaring;
+}
+
+.taskLink {
+  margin-left: $rightMaring;
+}
+
+.p {
+  font-size: $textSize;
+}
+
+body {
+  text-align: center;
+}

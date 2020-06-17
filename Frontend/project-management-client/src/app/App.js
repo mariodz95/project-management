@@ -13,8 +13,9 @@ import { CreateOrganizationPage } from "../OrganizationPage/CreateOrganizationPa
 import { ProjectPage } from "../ProjectPage/ProjectPage";
 import { CreateProjectPage } from "../ProjectPage/CreateProjectPage";
 import { TaskListContainer } from "../TaskPage/TaskListContainer";
-import { TaskFormPage } from "../TaskPage/TaskFormPage";
+import { TaskFormContainer } from "../TaskPage/TaskFormContainer";
 import "../styles/App.css";
+import TaskDetailContainer from "../TaskPage/TaskDetailContainer";
 
 class App extends React.Component {
   constructor(props) {
@@ -37,7 +38,8 @@ class App extends React.Component {
           <Route path="/projects" component={ProjectPage} />
           <Route path="/createproject" component={CreateProjectPage} />
           <Route path="/taskpage" component={TaskListContainer} />
-          <Route path="/taskfrom" component={TaskFormPage} />
+          <Route path="/taskfrom" component={TaskFormContainer} />
+          <Route path="/taskdetail" component={TaskDetailContainer} />
           <Route
             path="/createorganization"
             component={CreateOrganizationPage}

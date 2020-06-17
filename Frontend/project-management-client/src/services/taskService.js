@@ -3,6 +3,7 @@ import { authHeader } from "../helpers/authHeader";
 export const taskService = {
   createTask,
   getAll,
+  _deleteTask,
 };
 
 function createTask(task) {
@@ -24,6 +25,18 @@ function getAll(projectName, pageNumber, pageSize) {
 
   return fetch(
     `https://localhost:44301/task/getall/${projectName.name}&${pageNumber}&${pageSize}`,
+    requestOptions
+  ).then(handleResponse);
+}
+
+function _deleteTask(id) {
+  const requestOptions = {
+    method: "DELETE",
+    headers: authHeader(),
+  };
+
+  return fetch(
+    `https://localhost:44301/task/delete/${id}`,
     requestOptions
   ).then(handleResponse);
 }

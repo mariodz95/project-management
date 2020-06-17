@@ -1,7 +1,5 @@
 ﻿using AutoMapper;
 using Common.Helpers;
-using Common.Interface_Sort_Pag_Flt;
-using DAL.Entities;
 using Helpers;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
