@@ -2,7 +2,6 @@
 using Common.Helpers;
 using Common.Interface_Sort_Pag_Flt;
 using Common.Sort_Pag_Flt;
-using DAL.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Model.Common.ProjectManagement;

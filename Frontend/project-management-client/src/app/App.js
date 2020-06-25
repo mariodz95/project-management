@@ -15,7 +15,7 @@ import { CreateProjectPage } from "../ProjectPage/CreateProjectPage";
 import { TaskListContainer } from "../TaskPage/TaskListContainer";
 import { TaskFormContainer } from "../TaskPage/TaskFormContainer";
 import "../styles/App.css";
-import TaskDetailContainer from "../TaskPage/TaskDetailContainer";
+import { TaskDetailContainer } from "../TaskPage/TaskDetailContainer";
 
 class App extends React.Component {
   constructor(props) {

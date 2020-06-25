@@ -17,6 +17,7 @@ namespace Common.Helpers
             CreateMap<Project, IProjectModel>().ReverseMap();
             CreateMap<UserProject, IUserProjectModel>().ReverseMap();
             CreateMap<ITaskModel, DAL.Entities.Task>().ReverseMap();
+            CreateMap<Comment, ICommentModel>().ReverseMap();
         }
     }
 }

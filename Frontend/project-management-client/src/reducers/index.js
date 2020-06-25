@@ -6,6 +6,7 @@ import { registration } from "./registrationReducer";
 import organizations from "./organizationReducer";
 import projects from "./projectReducer";
 import tasks from "./taskReducer";
+import comments from "./commentReducer";
 
 const rootReducer = combineReducers({
   authentication,
@@ -15,6 +16,7 @@ const rootReducer = combineReducers({
   organizations,
   projects,
   tasks,
+  comments,
 });
 
 export default rootReducer;

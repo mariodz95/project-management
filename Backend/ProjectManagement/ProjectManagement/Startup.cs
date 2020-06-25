@@ -53,6 +53,9 @@ namespace ProjectManagement
             builder.RegisterType<TaskRepository>().As<ITaskRepository>();
             builder.RegisterType<TaskService>().As<ITaskService>();
 
+            builder.RegisterType<CommentRepository>().As<ICommentRepository>();
+            builder.RegisterType<CommentService>().As<ICommentService>();
+
             builder.RegisterType<Sorting>().As<ISorting>();
             builder.RegisterType<Paging>().As<IPaging>();
             builder.RegisterType<Filtering>().As<IFiltering>();
