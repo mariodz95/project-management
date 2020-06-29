@@ -32,7 +32,6 @@ function getAll(userId, pageNumber, pageSize, search) {
 }
 
 function updateProject(id, project) {
-  console.log("update", project);
   const requestOptions = {
     method: "POST",
     headers: { "Content-Type": "application/json" },

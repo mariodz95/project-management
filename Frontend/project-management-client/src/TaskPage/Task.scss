@@ -1,5 +1,15 @@
 $textSize: 16px;
 $rightMaring: 100px;
+$topMargin: 25px;
+
+td {
+  font-size: $textSize;
+}
+
+p {
+  font-size: $textSize;
+}
+
 td {
   font-size: $textSize;
 }
@@ -18,4 +28,12 @@ h1 {
 
 body {
   text-align: center;
+}
+
+.comment {
+  margin-top: $topMargin;
+}
+
+.button {
+  margin-bottom: 100px;
 }

@@ -1,7 +1,7 @@
 import React from "react";
 import { Table, Button, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import "../styles/TaskList.scss";
+import "./Task.scss";
 import ReactPaginate from "react-paginate";
 
 export const TaskListPresenter = (props) => (
@@ -73,7 +73,6 @@ export const TaskListPresenter = (props) => (
       </tbody>
     </Table>
     <div className="pagination">
-      {console.log("page count", props.pageCount)}
       <ReactPaginate
         previousLabel={"previous"}
         nextLabel={"next"}

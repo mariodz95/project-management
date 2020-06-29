@@ -1,6 +1,6 @@
-﻿using Model.Common.ProjectManagement;
+﻿using DAL.Entities;
+using Model.Common.ProjectManagement;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -10,5 +10,7 @@ namespace Service.Common.ProjectManagement
     {
         Task<ICommentModel> CreateAsync(ICommentModel newComment);
         Task<IEnumerable<ICommentModel>> GetAllAsync(Guid taskId);
+        Task<ICommentModel> DeleteAsync(Guid id);
+        Task<ICommentModel> UpdateAsync(Guid id, Comment comment);
     }
 }

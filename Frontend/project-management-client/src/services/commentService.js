@@ -1,21 +1,23 @@
 import { authHeader } from "../helpers/authHeader";
+import { handleResponse } from "./handleResponse";
 
 export const commentService = {
   createComment,
   getAll,
+  _delete,
+  update,
 };
 
-function createComment(comment) {
-  console.log("Comment service", comment);
+const url = "https://localhost:44301";
 
+function createComment(comment) {
   const requestOptions = {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(comment),
   };
-  return fetch(`https://localhost:44301/comment/create`, requestOptions).then(
-    handleResponse
-  );
+
+  return fetch(`${url}/comment/create`, requestOptions).then(handleResponse);
 }
 
 function getAll(taskId) {
@@ -24,27 +26,30 @@ function getAll(taskId) {
     headers: authHeader(),
   };
 
-  return fetch(
-    `https://localhost:44301/comment/getall/${taskId}`,
-    requestOptions
-  ).then(handleResponse);
+  return fetch(`${url}/comment/getall/${taskId}`, requestOptions).then(
+    handleResponse
+  );
 }
 
-export const handleResponse = (response) => {
-  return response.text().then((text) => {
-    const data = text && JSON.parse(text);
+function _delete(id) {
+  const requestOptions = {
+    method: "DELETE",
+    headers: authHeader(),
+  };
 
-    if (!response.ok) {
-      if (response.status === 401) {
-        //auto logout if 401 response returned from api
-        //logout();
-        // location.reload(true);
-      }
+  return fetch(`${url}/comment/delete/${id}`, requestOptions).then(
+    handleResponse
+  );
+}
 
-      const error = (data && data.message) || response.statusText;
-      return Promise.reject(error);
-    }
+function update(id, comment) {
+  const requestOptions = {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(comment),
+  };
 
-    return data;
-  });
-};
+  return fetch(`${url}/comment/update/${id}`, requestOptions).then(
+    handleResponse
+  );
+}

@@ -24,9 +24,37 @@ namespace Repository.ProjectManagement
             return await context.SaveChangesAsync();
         }
 
+        public async Task<Comment> DeleteAsync(Guid id)
+        {
+            var comment = await context.Comment.FindAsync(id);
+
+            if(comment == null)
+            {
+                return null;
+            }
+            else
+            {
+                context.Comment.Remove(comment);
+                await context.SaveChangesAsync();
+                return comment;
+            }
+        }
+
         public async Task<IEnumerable<Comment>> GetAllAsync(Guid taskId)
         {
             return await context.Comment.AsNoTracking().Where(c => c.TaskId == taskId).ToListAsync();
+        }
+
+        public async Task<Comment> GetByIdAsync(Guid id)
+        {
+            return await context.Comment.FindAsync(id);
+        }
+
+        public async Task<Comment> UpdateAsync(Comment comment)
+        {
+            context.Comment.Update(comment);
+            await context.SaveChangesAsync();
+            return comment;
         }
     }
 }

@@ -34,7 +34,7 @@ namespace ProjectManagement.Controllers
             try
             {
                 var comment = mapper.Map<ICommentModel>(newComment);
-                await commentService.CreateAsync(comment);
+                comment = await commentService.CreateAsync(comment);
                 return Ok(comment);
             }
             catch (AppException ex)
@@ -49,8 +49,37 @@ namespace ProjectManagement.Controllers
         {
             var comments = await commentService.GetAllAsync(taskId);
 
-            return Ok(new { comments = mapper.Map<IEnumerable<CommentViewModel>>(comments)});
+            return Ok(mapper.Map<IEnumerable<CommentViewModel>>(comments));
         }
 
+        [AllowAnonymous]
+        [HttpDelete("delete/{id}")]
+        public async Task<IActionResult> DeleteComment(Guid id)
+        {
+            try
+            {
+                var deletedComment = await commentService.DeleteAsync(id);
+                return Ok(deletedComment);
+            }
+            catch (AppException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        [AllowAnonymous]
+        [HttpPost("update/{id}")]
+        public async Task<IActionResult> Update(Guid id, Comment comment)
+        {
+            try
+            {
+                var updateComment = await commentService.UpdateAsync(id, comment);
+                return Ok(updateComment);
+            }
+            catch (AppException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
     }
 }

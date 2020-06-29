@@ -2,7 +2,7 @@ import React from "react";
 import { Form, Button, Col } from "react-bootstrap";
 import Container from "react-bootstrap/Container";
 import Select from "react-select";
-import "../styles/TaskForm.scss";
+import "./Task.scss";
 import { history } from "../helpers/history";
 
 const priority = [
